@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!-- This file is part of base_external_mapping module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full
+copyright notices and license terms. -->
+<tryton>
+    <data>
+        <!-- base.external.mapping -->
+        <record model="ir.ui.view" id="base_external_mapping_form_view">
+            <field name="model">base.external.mapping</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Mapping" col="6">
+                    <label name="name"/>
+                    <field name="name"/>
+                    <label name="model"/>
+                    <field name="model"/>
+                    <field name="mapping_lines" colspan="6"/>
+                    <label name="state"/>
+                    <field name="state"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="base_external_mapping_tree_view">
+            <field name="model">base.external.mapping</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Mapping">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="state"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.action.act_window" id="base_external_mapping_act">
+            <field name="name">Base External Mapping</field>
+            <field name="res_model">base.external.mapping</field>
+        </record>
+
+        <record model="ir.action.act_window.view" id="base_external_mapping_act_tree_view">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="base_external_mapping_tree_view"/>
+            <field name="act_window" ref="base_external_mapping_act"/>
+        </record>
+
+        <record model="ir.action.act_window.view" id="base_external_mapping_act_form_view">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="base_external_mapping_form_view"/>
+            <field name="act_window" ref="base_external_mapping_act"/>
+        </record>
+
+        <menuitem name="Base External Mapping"
+            id="base_external_mapping_menu"
+            parent="ir.menu_models"
+            action="base_external_mapping_act"/>
+
+        <!-- base.external.mapping.line -->
+        <record model="ir.ui.view" id="base_external_mapping_line_form_view">
+            <field name="model">base.external.mapping.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Mapping Line" col="8">
+                    <label name="field"/>
+                    <field name="field" colspan="2"/>
+                    <label name="mapping_type"/>
+                    <field name="mapping_type" colspan="2"/>
+                    <label name="active"/>
+                    <field name="active"/>
+                    <label name="external_field"/>
+                    <field name="external_field" colspan="2"/>
+                    <label name="external_type"/>
+                    <field name="external_type" colspan="2"/>
+                    <label name="sequence"/>
+                    <field name="sequence"/>
+                    <label name="translate"/>
+                    <field name="translate"/>
+                    <label name="update"/>
+                    <field name="update"/>
+                    <label name="mapping"/>
+                    <field name="mapping"/>
+                    <newline/>
+                    <separator name="in_function" colspan="8"/>
+                    <field name="in_function" colspan="8"/>
+                    <separator name="out_function" colspan="8"/>
+                    <field name="out_function" colspan="8"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="base_external_mapping_line_tree_view">
+            <field name="model">base.external.mapping.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <tree string="Mapping Line">
+                    <field name="sequence"/>
+                    <field name="mapping"/>
+                    <field name="field"/>
+                    <field name="external_field"/>
+                    <field name="mapping_type"/>
+                    <field name="external_type"/>
+                    <field name="translate"/>
+                    <field name="update"/>
+                    <field name="active"/>
+                </tree>
+                ]]>
+            </field>
+        </record>
+
+    </data>
+</tryton>

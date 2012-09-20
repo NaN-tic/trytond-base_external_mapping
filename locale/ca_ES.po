@@ -1,0 +1,274 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:base.external.mapping:"
+msgid ""
+"Syntax Error:\n"
+"%s"
+msgstr ""
+"Error de sintaxi:\n"
+"%s"
+
+msgctxt "error:base.external.mapping:"
+msgid "The name of the Mapping must be unique!"
+msgstr "El nom del mapeig ha de ser únic!"
+
+msgctxt "error:base.external.mapping:"
+msgid ""
+"Unknown Error:\n"
+"%s"
+msgstr ""
+"Error desconegut:\n"
+"%s"
+
+msgctxt "field:base.external.mapping,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:base.external.mapping,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:base.external.mapping,id:"
+msgid "ID"
+msgstr "Id"
+
+msgctxt "field:base.external.mapping,mapping_lines:"
+msgid "Mapping Lines"
+msgstr "Línies d'assignació"
+
+msgctxt "field:base.external.mapping,model:"
+msgid "Model"
+msgstr "Model"
+
+msgctxt "field:base.external.mapping,model_name:"
+msgid "Model Name"
+msgstr "Nom del model"
+
+msgctxt "field:base.external.mapping,name:"
+msgid "Code"
+msgstr "Codi"
+
+msgctxt "field:base.external.mapping,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:base.external.mapping,state:"
+msgid "State"
+msgstr "Estat"
+
+msgctxt "field:base.external.mapping,write_date:"
+msgid "Write Date"
+msgstr "Data d'escriptura"
+
+msgctxt "field:base.external.mapping,write_uid:"
+msgid "Write User"
+msgstr "Usuari d'escriptura"
+
+msgctxt "field:base.external.mapping.line,active:"
+msgid "Active"
+msgstr "Actiu"
+
+msgctxt "field:base.external.mapping.line,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:base.external.mapping.line,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:base.external.mapping.line,external_field:"
+msgid "External Field"
+msgstr "Camp extern"
+
+msgctxt "field:base.external.mapping.line,external_type:"
+msgid "External Type"
+msgstr "Tipus extern"
+
+msgctxt "field:base.external.mapping.line,field:"
+msgid "Field"
+msgstr "Camp"
+
+msgctxt "field:base.external.mapping.line,id:"
+msgid "ID"
+msgstr "Id"
+
+msgctxt "field:base.external.mapping.line,in_function:"
+msgid "Import to Tryton"
+msgstr "Importar a Tryton"
+
+msgctxt "field:base.external.mapping.line,mapping:"
+msgid "External Mapping"
+msgstr "Assignació extern"
+
+msgctxt "field:base.external.mapping.line,mapping_type:"
+msgid "Type"
+msgstr "Tipus"
+
+msgctxt "field:base.external.mapping.line,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:base.external.mapping.line,out_function:"
+msgid "Export from Tryton"
+msgstr "Exporta des de Tryton"
+
+msgctxt "field:base.external.mapping.line,rec_name:"
+msgid "Name"
+msgstr "Nom del camp"
+
+msgctxt "field:base.external.mapping.line,sequence:"
+msgid "Sequence"
+msgstr "Seqüència"
+
+msgctxt "field:base.external.mapping.line,translate:"
+msgid "Translate"
+msgstr "Traduir"
+
+msgctxt "field:base.external.mapping.line,update:"
+msgid "Exclude Update"
+msgstr "Exclou actualització"
+
+msgctxt "field:base.external.mapping.line,write_date:"
+msgid "Write Date"
+msgstr "Data d'escriptura"
+
+msgctxt "field:base.external.mapping.line,write_uid:"
+msgid "Write User"
+msgstr "Usuari d'escriptura"
+
+msgctxt "help:base.external.mapping,name:"
+msgid "Use lowercase, az09 characters and separated by . (dot)"
+msgstr "Utilitzeu minúscules, caràcters az09 i separat per . (punt)"
+
+msgctxt "help:base.external.mapping.line,in_function:"
+msgid ""
+"Type the python code for mapping this field.\n"
+"You can use:\n"
+"  * self: To make reference to this mapping record.\n"
+"  * pool: To make reference to the data base objects.\n"
+"  * values: The value of this field.\n"
+"You must return a variable called \"result\" with the result of the compute."
+msgstr ""
+"Escribiu el codi Python per assignar aquest camp.\n"
+"Podeu utilitzar:\n"
+"  * self: Per fer referència a aquest objecte.\n"
+"  * pool: Per fer referència als objectes de la base de dades.\n"
+"  * values: El valor d'aquest camp.\n"
+"Heu de retornar una variable anomenada \"result\" amb el resultat del càlcul.\n"
+"Un exemple d'un camp one2many podria ser:\n"
+"\n"
+"result = False\n"
+"model_obj = pool.get('product.product')\n"
+"model_values = model_obj.search([('code','=',values)])\n"
+"if model_values:\n"
+"    result = model_values[0]\n"
+
+msgctxt "help:base.external.mapping.line,out_function:"
+msgid ""
+"Type the python code for mapping this field.\n"
+"You can use:\n"
+"  * self: To make reference to this mapping record.\n"
+"  * pool: To make reference to the data base objects.\n"
+"  * record_ids: List IDs you call.\n"
+"  * record_id: ID you call.\n"
+"  * transaction: Transaction()\n"
+"  * context: Dictonary context\n"
+"You must return a variable called \"result\" with the result of the compute."
+msgstr ""
+"Escribiu el codi Python per assignar aquest camp.\n"
+"Podeu utilitzar:\n"
+"  * self: Per fer referència a aquest objecte.\n"
+"  * pool: Per fer referència als objectes de la base de dades.\n"
+"  * values: El valor d'aquest camp.\n"
+"Heu de retornar una variable anomenada \"result\" amb el resultat del càlcul."
+
+msgctxt "help:base.external.mapping.line,sequence:"
+msgid ""
+"The order you want to relate columns of the file with fields of Tryton."
+msgstr ""
+"L'ordre en el que voleu relacinar les columnes del fitxer amb els camps de "
+"Tryton."
+
+msgctxt "help:base.external.mapping.line,translate:"
+msgid "Check this option to export fields with locale sufix. Example: name_en"
+msgstr ""
+"Marqueu aquesta opció per exportar camps amb sufix local. Per exemple: "
+"name_ca"
+
+msgctxt "help:base.external.mapping.line,update:"
+msgid "When update data (write), this field is excluded"
+msgstr "Quan actualitzeu una dada (escribiu), aquest camp quedarà exclós."
+
+msgctxt "model:base.external.mapping,name:"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:base.external.mapping.line,name:"
+msgid "Base External Mapping Line"
+msgstr "Base External Mapping Line"
+
+msgctxt "model:ir.action,name:None"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.action,name:base_external_mapping_act"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.ui.menu,name:None"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.ui.menu,name:None"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.ui.menu,name:base_external_mapping_menu"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "selection:base.external.mapping,state:"
+msgid "Done"
+msgstr "Procès"
+
+msgctxt "selection:base.external.mapping,state:"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Boolean"
+msgstr "Booleà"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Float"
+msgstr "Flotant"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Integer"
+msgstr "Enter"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "String"
+msgstr "Cadena"
+
+msgctxt "selection:base.external.mapping.line,mapping_type:"
+msgid "Tryton -> External"
+msgstr "Tryton -> Exterior"
+
+msgctxt "selection:base.external.mapping.line,mapping_type:"
+msgid "Tryton <- External"
+msgstr "Tryton <- Exterior"
+
+msgctxt "selection:base.external.mapping.line,mapping_type:"
+msgid "Tryton <-> External"
+msgstr "Tryton <-> Exterior"
+
+msgctxt "view:base.external.mapping.line:"
+msgid "Mapping Line"
+msgstr "Línia de mapeig"
+
+msgctxt "view:base.external.mapping:"
+msgid "Mapping"
+msgstr "Mapeig"

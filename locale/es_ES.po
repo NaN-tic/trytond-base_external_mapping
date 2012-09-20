@@ -1,0 +1,272 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:base.external.mapping:"
+msgid ""
+"Syntax Error:\n"
+"%s"
+msgstr ""
+"Error de sintaxis:\n"
+"%s"
+
+msgctxt "error:base.external.mapping:"
+msgid "The name of the Mapping must be unique!"
+msgstr "¡El nombre de la asignación debe ser única!"
+
+msgctxt "error:base.external.mapping:"
+msgid ""
+"Unknown Error:\n"
+"%s"
+msgstr ""
+"Error desconocido:\n"
+"%s"
+
+msgctxt "field:base.external.mapping,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:base.external.mapping,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:base.external.mapping,id:"
+msgid "ID"
+msgstr "Id"
+
+msgctxt "field:base.external.mapping,mapping_lines:"
+msgid "Mapping Lines"
+msgstr "Líneas de asignación"
+
+msgctxt "field:base.external.mapping,model:"
+msgid "Model"
+msgstr "Modelo"
+
+msgctxt "field:base.external.mapping,model_name:"
+msgid "Model Name"
+msgstr "Nombre del modelo"
+
+msgctxt "field:base.external.mapping,name:"
+msgid "Code"
+msgstr "Código"
+
+msgctxt "field:base.external.mapping,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:base.external.mapping,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:base.external.mapping,write_date:"
+msgid "Write Date"
+msgstr "Fecha de escritura"
+
+msgctxt "field:base.external.mapping,write_uid:"
+msgid "Write User"
+msgstr "Usuario de escritura"
+
+msgctxt "field:base.external.mapping.line,active:"
+msgid "Active"
+msgstr "Activo"
+
+msgctxt "field:base.external.mapping.line,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:base.external.mapping.line,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
+msgctxt "field:base.external.mapping.line,external_field:"
+msgid "External Field"
+msgstr "Campo externo"
+
+msgctxt "field:base.external.mapping.line,external_type:"
+msgid "External Type"
+msgstr "Tipo externo"
+
+msgctxt "field:base.external.mapping.line,field:"
+msgid "Field"
+msgstr "Campo"
+
+msgctxt "field:base.external.mapping.line,id:"
+msgid "ID"
+msgstr "Id"
+
+msgctxt "field:base.external.mapping.line,in_function:"
+msgid "Import to Tryton"
+msgstr "Importar a Tryton"
+
+msgctxt "field:base.external.mapping.line,mapping:"
+msgid "External Mapping"
+msgstr "Asignación externa"
+
+msgctxt "field:base.external.mapping.line,mapping_type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:base.external.mapping.line,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:base.external.mapping.line,out_function:"
+msgid "Export from Tryton"
+msgstr "Exportar desde Tryton"
+
+msgctxt "field:base.external.mapping.line,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:base.external.mapping.line,sequence:"
+msgid "Sequence"
+msgstr "Secuencia"
+
+msgctxt "field:base.external.mapping.line,translate:"
+msgid "Translate"
+msgstr "Traducir"
+
+msgctxt "field:base.external.mapping.line,update:"
+msgid "Exclude Update"
+msgstr "Excluir actualización"
+
+msgctxt "field:base.external.mapping.line,write_date:"
+msgid "Write Date"
+msgstr "Fecha de escritura"
+
+msgctxt "field:base.external.mapping.line,write_uid:"
+msgid "Write User"
+msgstr "Usuario de escritura"
+
+msgctxt "help:base.external.mapping,name:"
+msgid "Use lowercase, az09 characters and separated by . (dot)"
+msgstr "Usa minúsculas, carácteres az09 y separados por . (punto)"
+
+msgctxt "help:base.external.mapping.line,in_function:"
+msgid ""
+"Type the python code for mapping this field.\n"
+"You can use:\n"
+"  * self: To make reference to this mapping record.\n"
+"  * pool: To make reference to the data base objects.\n"
+"  * values: The value of this field.\n"
+"You must return a variable called \"result\" with the result of the compute."
+msgstr ""
+"Escriba el código Python para asignar este campo.\n"
+"Puede utilizar:\n"
+"  * self: Para hacer referencia a este objeto.\n"
+"  * pool: Para hacer referencia a los objectos de la base de datos.\n"
+"  * values: El valor de este campo.\n"
+"Debe devolver una variable denominada \"result\" con el resultado del cálculo.Un ejemplo de un camp one2many podría ser:\n"
+"\n"
+"result = False\n"
+"model_obj = pool.get('product.product')\n"
+"model_values = model_obj.search([('code','=',values)])\n"
+"if model_values:\n"
+"    result = model_values[0]\n"
+
+msgctxt "help:base.external.mapping.line,out_function:"
+msgid ""
+"Type the python code for mapping this field.\n"
+"You can use:\n"
+"  * self: To make reference to this mapping record.\n"
+"  * pool: To make reference to the data base objects.\n"
+"  * record_ids: List IDs you call.\n"
+"  * record_id: ID you call.\n"
+"  * transaction: Transaction()\n"
+"  * context: Dictonary context\n"
+"You must return a variable called \"result\" with the result of the compute."
+msgstr ""
+"Escriba el código Python para asignar este campo.\n"
+"Puede utilizar:\n"
+"  * self: Para hacer referencia a este objeto.\n"
+"  * pool: Para hacer referencia a los objectos de la base de datos.\n"
+"  * values: El valor de este campo.\n"
+"Debe devolver una variable denominada \"result\" con el resultado del cálculo."
+
+msgctxt "help:base.external.mapping.line,sequence:"
+msgid ""
+"The order you want to relate columns of the file with fields of Tryton."
+msgstr ""
+"El orden en el que quiere relacionar las columnas del fichero con los campos"
+" de Tryton."
+
+msgctxt "help:base.external.mapping.line,translate:"
+msgid "Check this option to export fields with locale sufix. Example: name_en"
+msgstr ""
+"Marque esta opción para exportar campos con sufijo local: Ejemplo: name_es"
+
+msgctxt "help:base.external.mapping.line,update:"
+msgid "When update data (write), this field is excluded"
+msgstr "Cuando actualice un dato (escriba), este campo quedará excluido."
+
+msgctxt "model:base.external.mapping,name:"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:base.external.mapping.line,name:"
+msgid "Base External Mapping Line"
+msgstr "Línea de asignación externa base"
+
+msgctxt "model:ir.action,name:None"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.action,name:base_external_mapping_act"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.ui.menu,name:None"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.ui.menu,name:None"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "model:ir.ui.menu,name:base_external_mapping_menu"
+msgid "Base External Mapping"
+msgstr "Base External Mapping"
+
+msgctxt "selection:base.external.mapping,state:"
+msgid "Done"
+msgstr "Hecho"
+
+msgctxt "selection:base.external.mapping,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Boolean"
+msgstr "Booleano"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Float"
+msgstr "Flotante"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Integer"
+msgstr "Entero"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "String"
+msgstr "Cadena"
+
+msgctxt "selection:base.external.mapping.line,mapping_type:"
+msgid "Tryton -> External"
+msgstr "Tryton -> Exterior"
+
+msgctxt "selection:base.external.mapping.line,mapping_type:"
+msgid "Tryton <- External"
+msgstr "Tryton <- Exterior"
+
+msgctxt "selection:base.external.mapping.line,mapping_type:"
+msgid "Tryton <-> External"
+msgstr "Tryton <-> Exterior"
+
+msgctxt "view:base.external.mapping.line:"
+msgid "Mapping Line"
+msgstr "Línea de asignación"
+
+msgctxt "view:base.external.mapping:"
+msgid "Mapping"
+msgstr "Asignación"
