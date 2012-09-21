@@ -100,7 +100,7 @@ Fields
 Translate
 =========
 
-Only Tryton -> External option available, return this field add prefix locale. For example:
+Only Tryton -> External option available, return this field add prefix locale. For example::
 
     {
         name_en':'Product',
