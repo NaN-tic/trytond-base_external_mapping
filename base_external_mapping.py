@@ -9,10 +9,11 @@ from trytond.tools import safe_eval, datetime_strftime
 from trytond.transaction import Transaction
 import logging
 
+__all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
+
 class BaseExternalMapping(ModelSQL, ModelView):
     'Base External Mapping'
-    _name = 'base.external.mapping'
-    _description = __doc__
+    __name__ = 'base.external.mapping'
 
     name = fields.Char('Code', required=True,
         states={
@@ -32,44 +33,50 @@ class BaseExternalMapping(ModelSQL, ModelView):
         [('draft', 'Draft'), ('done', 'Done')],
         "State", required=True, readonly=True)
 
-    def __init__(self):
-        super(BaseExternalMapping, self).__init__()
-        self._rpc.update({
+    @classmethod
+    def __setup__(cls):
+        super(BaseExternalMapping, cls).__setup__()
+        cls.__rpc__.update({
             'map_external_to_tryton': True,
             'map_tryton_to_external': True,
             'map_del_keys': True,
         })
-        self._error_messages.update({
+        cls._error_messages.update({
             'syntax_error': ('Syntax Error:\n%s'),
             'unknown_error': ('Unknown Error:\n%s'),
             })
-        self._sql_constraints += [('name_uniq', 'UNIQUE (name)',
+        cls._sql_constraints += [('name_uniq', 'UNIQUE (name)',
                 'The name of the Mapping must be unique!')]
 
-    def create(self, vals):
+    @classmethod
+    def create(cls, vals):
         vals['state'] = 'done'
-        return super(BaseExternalMapping, self).create(vals)
+        return super(BaseExternalMapping, cls).create(vals)
 
-    def copy(self, ids, default=None):
+    @classmethod
+    def copy(cls, records, default=None):
         """ Duplicates record with given id updating it with default values
-            @param ids: Identifiers of records to copy,
+            @param records: Identifiers of records to copy,
             @param default: Dictionary of field values to change before saving
                 the duplicated object,
             @return: List of identifier records duplicated
         """
-        if not default:
+        if default is None:
             default = {}
         res = []
-        for mapping in self.browse(ids):
+        default = default.copy()
+        for mapping in records:
             name = mapping.name + '-copy'
-            while self.search([('name', '=', name)]):
+            while cls.search([('name', '=', name)]):
                 name += '-copy'
             default['name'] = name
-            res.append(super(BaseExternalMapping, self).copy(mapping.id,
-                    default=default))
+            new_mapping, = super(BaseExternalMapping, cls).copy([mapping],
+                    default=default)
+            res.append(new_mapping)
         return res
 
-    def default_state(self):
+    @staticmethod
+    def default_state():
         return 'draft'
 
     def map_external_to_tryton(self, name, values={}, context={}):
@@ -269,12 +276,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 del values[line]
         return values
 
-BaseExternalMapping()
 
 class BaseExternalMappingLine(ModelSQL, ModelView):
     'Base External Mapping Line'
-    _name = 'base.external.mapping.line'
-    _description = __doc__
+    __name__ = 'base.external.mapping.line'
 
     mapping = fields.Many2One('base.external.mapping', 'External Mapping',
             ondelete='CASCADE')
@@ -326,21 +331,21 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
                 ' result of the compute.' 
             )
 
-    def __init__(self):
-        super(BaseExternalMappingLine, self).__init__()
-        self._order.insert(0, ('sequence', 'ASC'))
+    @classmethod
+    def __setup__(cls):
+        super(BaseExternalMappingLine, cls).__setup__()
+        cls._order.insert(0, ('sequence', 'ASC'))
 
-    def default_active(self):
+    @staticmethod
+    def default_active():
         return True
 
-    def on_change_field(self, vals):
+    def on_change_field(self):
         model_obj = Pool().get('ir.model.field')
-        if vals['field']:
-            return {'name': model_obj.browse(vals['field']).name}
+        if self.field:
+            return {'name': self.field.name}
         else:
-            return {'name': vals['external_field']}
+            return {'name': self.external_field}
 
-    def on_change_external_field(self, vals):
-        return self.on_change_field(vals)
-
-BaseExternalMappingLine()
+    def on_change_external_field(self):
+        return self.on_change_field()
