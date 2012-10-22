@@ -4,8 +4,7 @@
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
-from trytond.pyson import Eval, Equal, Not
-from trytond.tools import safe_eval, datetime_strftime
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 import logging
 
@@ -266,7 +265,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
         mappings = self.search([('name','=',name)])
 
         if not len(mappings)>0:
-            logger.info('Not code available mapping: %s' % name)
+            logging.info('Not code available mapping: %s' % name)
             return False
         for line in self.browse(mappings[0]).mapping_lines:
             if line.update:
@@ -341,7 +340,6 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         return True
 
     def on_change_field(self):
-        model_obj = Pool().get('ir.model.field')
         if self.field:
             return {'name': self.field.name}
         else:
