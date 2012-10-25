@@ -56,16 +56,16 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         Create Mapping.
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            model_obj = POOL.get('ir.model')
-            model_id = model_obj.search([
+            Model = POOL.get('ir.model')
+            model = Model.search([
                 ('model', '=', 'product.template'),
                 ], limit=1)[0]
-            mapping1_id = self.mapping.create({
+            mapping1 = self.mapping.create({
                 'name': 'mapping.product',
-                'model': model_id,
+                'model': model,
                 'state': 'draft'
                 })
-            self.assert_(mapping1_id)
+            self.assert_(mapping1)
             transaction.cursor.commit()
 
     def test0020create_mapping_lines(self):
@@ -77,36 +77,36 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             'cost_price': 2,
         }
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            model_obj = POOL.get('ir.model')
-            model_ids = model_obj.search([
+            Model = POOL.get('ir.model')
+            models = Model.search([
                 ('model', 'in', ('product.product', 'product.template')),
                 ])
-            field_obj = POOL.get('ir.model.field')
-            field_ids = field_obj.search([
-                ('model', 'in', model_ids),
+            Field = POOL.get('ir.model.field')
+            fields = Field.search([
+                ('model', 'in', models),
                 ])
-            mapping1_id = self.mapping.search([
+            mapping1 = self.mapping.search([
                 ('name', '=', 'mapping.product'),
                 ], limit=1)[0]
-            mapping_line_ids = []
-            for field in field_obj.browse(field_ids):
+            mapping_lines = []
+            for field in Field.browse(fields):
                 if field.name not in line_number: continue
-                mapping_line_id = self.mapping_line.create({
-                    'mapping': mapping1_id,
+                mapping_line = self.mapping_line.create({
+                    'mapping': mapping1,
                     'field': field.id,
                     'mapping_type': 'in_out',
                     'external_type': field_type[field.ttype],
                     'external_field': field.name,
                     'sequence': line_number[field.name],
                     })
-                mapping_line_ids.append(mapping_line_id)
-                self.assert_(mapping_line_id)
+                mapping_lines.append(mapping_line)
+                self.assert_(mapping_line)
             transaction.cursor.commit()
-            mapping_ids = self.mapping.search([
-                ('mapping_lines', 'in', mapping_line_ids),
+            mappings = self.mapping.search([
+                ('mapping_lines', 'in', mapping_lines),
                 ])
-            mapping_id = mapping_ids[0]
-            self.assertEqual(mapping_id, mapping1_id)
+            mapping = mappings[0]
+            self.assertEqual(mapping, mapping1)
 
     def test0030write_mapping_line(self):
         '''
@@ -127,11 +127,11 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         Copy Mapping.
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            mapping1_id = self.mapping.search([
+            mapping1 = self.mapping.search([
                 ('name', '=', 'mapping.product'),
                 ], limit=1)
-            mapping2_id = self.mapping.copy(mapping1_id)
-            self.assert_(mapping2_id)
+            mapping2 = self.mapping.copy(mapping1)
+            self.assert_(mapping2)
             transaction.cursor.commit()
 
     def test0050create_product(self):
@@ -139,35 +139,35 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         Create Product
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            cat_obj = POOL.get('product.category')
-            cat_id = cat_obj.create({'name': 'Toys'})
-            self.assert_(cat_id)
+            Category = POOL.get('product.category')
+            category = Category.create({'name': 'Toys'})
+            self.assert_(category)
 
-            uom_obj = POOL.get('product.uom')
+            Uom = POOL.get('product.uom')
             values = {
                 'name': 'unit',
                 'symbol': 'u',
-                'category': cat_id,
+                'category': category,
                 'rate': 1,
                 'factor': 1,
                 'rounding': 2,
                 'digits': 2,
             }
-            uom_id = uom_obj.create(values)
-            self.assert_(uom_id)
+            uom = Uom.create(values)
+            self.assert_(uom)
 
-            prod_obj = POOL.get('product.product')
+            Product = POOL.get('product.product')
             values = {
                 'name': 'Ball',
                 'list_price': '345.32',
                 'cost_price': '345.32',
                 'type': 'goods',
-                'default_uom': uom_id,
+                'default_uom': uom,
                 'cost_price_method': 'fixed',
                 'code':'TEST',
             }
-            prod_id = prod_obj.create(values)
-            self.assert_(prod_id)
+            product = Product.create(values)
+            self.assert_(product)
             transaction.cursor.commit()
 
     def test0060map_external_to_tryton(self):
@@ -185,31 +185,32 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                     'name': 'Ball',
                     'cost_price': 23.5
                 })
-    
+
     def test0070map_tryton_to_external(self):
         '''
         Map tryton data to external dictionary (to export the record)
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            record_ids = POOL.get('product.product').search([
+            records = POOL.get('product.product').search([
                 ('code', '=', 'TEST'),
                 ], limit=1)
             name = 'mapping.product'
-            result = self.mapping.map_tryton_to_external(name, record_ids)
+            ids = [record.id for record in records]
+            result = self.mapping.map_tryton_to_external(name, ids)
             self.assertEqual(result, [{
                     'id': 1, 
                     'name_en': 'Ball',
                     'cost_price': 345.32,
                 }])
 
-    def test0080map_del_keys(self):
+    def test0080map_exclude_update(self):
         '''
         Delete key from dict
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
             name = 'mapping.product'
             result = {'name': 'Ball', 'cost_price': 30.0, 'active': True}
-            result = self.mapping.map_del_keys(name, result)
+            result = self.mapping.map_exclude_update(name, result)
             self.assertEqual(result, {
                     'active': True,
                     'cost_price': 30.0,

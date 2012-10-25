@@ -7,6 +7,7 @@ from trytond.pool import Pool
 from trytond.pyson import Eval, Equal, Not
 from trytond.tools import safe_eval, datetime_strftime
 from trytond.transaction import Transaction
+from trytond.rpc import RPC
 import logging
 
 __all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
@@ -37,9 +38,9 @@ class BaseExternalMapping(ModelSQL, ModelView):
     def __setup__(cls):
         super(BaseExternalMapping, cls).__setup__()
         cls.__rpc__.update({
-            'map_external_to_tryton': True,
-            'map_tryton_to_external': True,
-            'map_del_keys': True,
+            'map_external_to_tryton': RPC(),
+            'map_tryton_to_external': RPC(),
+            'map_exclude_update': RPC(),
         })
         cls._error_messages.update({
             'syntax_error': ('Syntax Error:\n%s'),
@@ -79,7 +80,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
     def default_state():
         return 'draft'
 
-    def map_external_to_tryton(self, name, values={}, context={}):
+    @classmethod
+    def map_external_to_tryton(cls, name, values={}, context={}):
         """ Get external dictionary of values and process it to Tryton
                 dictionary values
             @param name: Str with the identifier of the
@@ -90,11 +92,11 @@ class BaseExternalMapping(ModelSQL, ModelView):
         """
         results = {}
         logger = logging.getLogger('base_external_mapping')
-        mappings = self.search([('name','=',name)])
+        mappings = cls.search([('name','=',name)])
         if not len(mappings)>0:
             logger.info('Not code available mapping: %s' % name)
             return False
-        external_mapping = self.browse(mappings[0])
+        external_mapping = cls(mappings[0])
         for mapping_line in external_mapping.mapping_lines:
             if mapping_line.external_field in values and \
                     (mapping_line.mapping_type == 'in_out' or \
@@ -102,7 +104,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                      mapping_line.active == True:
                 if mapping_line.in_function:
                     localspace = {
-                        "self": self,
+                        "self": cls,
                         "pool": Pool(),
                         "values": values[mapping_line.external_field],
                     }
@@ -148,12 +150,13 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 results[mapping_line.field.name] = result
         return results
 
-    def map_tryton_to_external(self, name, record_ids=[], langs=[], context={}):
+    @classmethod
+    def map_tryton_to_external(cls, name, records=[], langs=[], context={}):
         """ Get Tryton dictionary of values and process it to external
                 dictionary values
             @param name: Str with the identifier of the
                 base.external.mapping model
-            @param record_ids: Identifiers of the values to export
+            @param records: Identifiers of the values to export
             @param langs: List of codes of languages to export
             @return:
                 * List of dictionaries with mapped external values
@@ -163,28 +166,28 @@ class BaseExternalMapping(ModelSQL, ModelView):
         relational_fields = ['many2one', 'one2many','many2many']
         logger = logging.getLogger('base_external_mapping')
 
-        if isinstance(record_ids, (int, long)):
-            record_ids = [record_ids]
-        if not len(record_ids)>0:
+        if isinstance(records, (int, long)):
+            records = [records]
+        if not len(records)>0:
             logger.error('Not set IDs from %s' % name)
             return res
-        mappings = self.search([('name','=',name)])
+        mappings = cls.search([('name','=',name)])
         if not len(mappings)>0:
             logger.info('Not code available mapping: %s' % name)
             return False
-        external_mapping = self.browse(mappings[0])
+        external_mapping = cls(mappings[0])
         if not len(langs)>0:
             langs = Pool().get('ir.lang').get_translatable_languages()
 
-        for record_id in record_ids:
-            data_values = {'id': record_id}
+        for record in records:
+            data_values = {'id': record}
             model_name = external_mapping.model.model
-            model_obj = Pool().get(model_name)
-            ids = model_obj.search([('id','=',record_id)])
+            Model = Pool().get(model_name)
+            ids = Model.search([('id','=',record)])
             if not len(ids)>0:
                 continue
             with Transaction().set_context(**context):
-                model = model_obj.browse(record_id)
+                model = Model(record)
             for mapping_line in external_mapping.mapping_lines:
                 if not mapping_line.active:
                     continue
@@ -195,15 +198,15 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 if mapping_line.translate:
                     for lang in langs:
                         if lang != 'en_US':
-                            trans_obj = Pool().get('ir.translation')
-                            trans_ids = trans_obj.search([
+                            Translation = Pool().get('ir.translation')
+                            trans_ids = Translation.search([
                                 ('lang', '=', lang),
                                 ('name', '=', model_name + ',' + field),
-                                ('res_id', '=', record_id)
+                                ('res_id', '=', record)
                             ])
                             if trans_ids:
-                                translation = Pool().get('ir.translation').\
-                                        browse(trans_ids[0])
+                                translation = Pool().get('ir.translation')\
+                                        (trans_ids[0])
                                 trans_value = translation.value
                             else:
                                 trans_value = getattr(model, field) or ''
@@ -216,10 +219,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     out_function = mapping_line.out_function
                     if out_function:
                         localspace = {
-                            "self": self,
+                            "self": cls,
                             "pool": Pool(),
-                            "record_ids": record_ids,
-                            "record_id": record_id,
+                            "records": records,
+                            "record": record,
                             "transaction": Transaction(),
                             "context": context,
                         }
@@ -234,7 +237,9 @@ class BaseExternalMapping(ModelSQL, ModelView):
                                 localspace['result'] or False
                     elif ttype in relational_fields:
                         if ttype == 'many2one':
-                            data_value = getattr(model, field).id
+                            data_value = getattr(model, field)
+                            if data_value is not None:
+                                data_value = data_value.id
                         else: # Many2Many or One2Many fields, create list
                             data_value = []
                             values = getattr(model, field)
@@ -254,7 +259,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
             res.append(data_values)
         return res
 
-    def map_del_keys(self, name, values={}):
+    @classmethod
+    def map_exclude_update(cls, name, values={}):
         """
         Exclude some keys in values from mapping
         @param name: Str with the identifier of the
@@ -263,12 +269,11 @@ class BaseExternalMapping(ModelSQL, ModelView):
         :return vals dicc values recalculated
         """
         exclude_lines = []
-        mappings = self.search([('name','=',name)])
-
+        mappings = cls.search([('name','=',name)])
         if not len(mappings)>0:
             logger.info('Not code available mapping: %s' % name)
             return False
-        for line in self.browse(mappings[0]).mapping_lines:
+        for line in cls(mappings[0]).mapping_lines:
             if line.update:
                 exclude_lines.append(line.field.name)
         for line in exclude_lines:
@@ -323,8 +328,8 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
                 'You can use:\n' + \
                 '  * self: To make reference to this mapping record.\n' + \
                 '  * pool: To make reference to the data base objects.\n' + \
-                '  * record_ids: List IDs you call.\n' + \
-                '  * record_id: ID you call.\n' + \
+                '  * records: List IDs you call.\n' + \
+                '  * record: ID you call.\n' + \
                 '  * transaction: Transaction()\n' + \
                 '  * context: Dictonary context\n' + \
                 'You must return a variable called "result" with the' + \
@@ -341,7 +346,6 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         return True
 
     def on_change_field(self):
-        model_obj = Pool().get('ir.model.field')
         if self.field:
             return {'name': self.field.name}
         else:
