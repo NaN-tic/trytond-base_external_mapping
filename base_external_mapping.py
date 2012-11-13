@@ -1,26 +1,25 @@
 #This file is part of base_external_mapping module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains 
+#The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
 
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
-from trytond.pyson import Eval, Equal, Not
-from trytond.tools import safe_eval, datetime_strftime
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
 import logging
 
 __all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
 
+
 class BaseExternalMapping(ModelSQL, ModelView):
     'Base External Mapping'
     __name__ = 'base.external.mapping'
-
     name = fields.Char('Code', required=True,
         states={
             'readonly': Eval('state').in_(['done']),
             },
-        depends=['state'], 
+        depends=['state'],
         help='Use lowercase, az09 characters and separated by . (dot)')
     model = fields.Many2One('ir.model', 'Model', required=True,
         ondelete='CASCADE',
@@ -92,8 +91,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
         """
         results = {}
         logger = logging.getLogger('base_external_mapping')
-        mappings = cls.search([('name','=',name)])
-        if not len(mappings)>0:
+        mappings = cls.search([('name', '=', name)])
+        if not len(mappings) > 0:
             logger.info('Not code available mapping: %s' % name)
             return False
         external_mapping = cls(mappings[0])
@@ -111,10 +110,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     with Transaction().set_context(**context):
                         try:
                             exec mapping_line.in_function in localspace
-                            # It is possible that if there is an error in the code
-                            # of the field, when execute it, the database raises an
-                            # error too, so it could be necessary to make a commit
-                            # or a roolback. I don't know yet.
+                            # It is possible that if there is an error in the
+                            # code of the field, when execute it, the database
+                            # raises an error too, so it could be necessary
+                            # to make a commit or a roolback. I don't know yet.
                         except SyntaxError, e:
                             logger.error('Syntax Error in mapping %s, line %s. Error: %s' %
                                 (mapping_line.mapping.name, mapping_line.field.name, e))
@@ -127,11 +126,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             logger.error('Unknown Error in mapping %s, line %s. Message: %s' %
                                 (mapping_line.mapping.name, mapping_line.field.name, e))
                             return False
-                        result = localspace['result'] if 'result' in localspace \
-                                else False
+                        result = localspace['result'] if 'result' in localspace else False
                 else:
                     result = values[mapping_line.external_field]
-                # Force type of result to be float, int or bool (default is str)
+                # Force type of result to be float, int or bool (def is str)
                 if mapping_line.external_type == 'float':
                     try:
                         result = float(result)
@@ -162,29 +160,29 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 * List of dictionaries with mapped external values
                 * If not code or ids, return blank list
         """
-        res=[]
-        relational_fields = ['many2one', 'one2many','many2many']
+        res = []
+        relational_fields = ['many2one', 'one2many', 'many2many']
         logger = logging.getLogger('base_external_mapping')
 
         if isinstance(records, (int, long)):
             records = [records]
-        if not len(records)>0:
+        if not len(records) > 0:
             logger.error('Not set IDs from %s' % name)
             return res
-        mappings = cls.search([('name','=',name)])
-        if not len(mappings)>0:
+        mappings = cls.search([('name', '=', name)])
+        if not len(mappings) > 0:
             logger.info('Not code available mapping: %s' % name)
             return False
         external_mapping = cls(mappings[0])
-        if not len(langs)>0:
+        if not len(langs) > 0:
             langs = Pool().get('ir.lang').get_translatable_languages()
 
         for record in records:
             data_values = {'id': record}
             model_name = external_mapping.model.model
             Model = Pool().get(model_name)
-            ids = Model.search([('id','=',record)])
-            if not len(ids)>0:
+            ids = Model.search([('id', '=', record)])
+            if not len(ids) > 0:
                 continue
             with Transaction().set_context(**context):
                 model = Model(record)
@@ -193,7 +191,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     continue
                 if not mapping_line.mapping_type in ('out', 'in_out'):
                     continue
-                field =  mapping_line.field.name
+                field = mapping_line.field.name
                 external_field = mapping_line.external_field
                 if mapping_line.translate:
                     for lang in langs:
@@ -205,8 +203,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                                 ('res_id', '=', record)
                             ])
                             if trans_ids:
-                                translation = Pool().get('ir.translation')\
-                                        (trans_ids[0])
+                                translation = Pool().get('ir.translation')(trans_ids[0])
                                 trans_value = translation.value
                             else:
                                 trans_value = getattr(model, field) or ''
@@ -229,9 +226,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         try:
                             exec out_function in localspace
                         except Exception, e:
-                            logger.error('Unknown Error exporting line with'\
-                                    ' id %s. Message: %s' % \
-                                    (mapping_line.id, e))
+                            logger.error('Unknown Error exporting line with'
+                                ' id %s. Message: %s' % (mapping_line.id, e))
                             return False
                         data_value = 'result' in localspace and \
                                 localspace['result'] or False
@@ -240,7 +236,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             data_value = getattr(model, field)
                             if data_value is not None:
                                 data_value = data_value.id
-                        else: # Many2Many or One2Many fields, create list
+                        # Many2Many or One2Many fields, create list
+                        else:
                             data_value = []
                             values = getattr(model, field)
                             for val in values:
@@ -269,8 +266,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
         :return vals dicc values recalculated
         """
         exclude_lines = []
-        mappings = cls.search([('name','=',name)])
-        if not len(mappings)>0:
+        mappings = cls.search([('name', '=', name)])
+        if not len(mappings) > 0:
             logger.info('Not code available mapping: %s' % name)
             return False
         for line in cls(mappings[0]).mapping_lines:
@@ -285,7 +282,6 @@ class BaseExternalMapping(ModelSQL, ModelView):
 class BaseExternalMappingLine(ModelSQL, ModelView):
     'Base External Mapping Line'
     __name__ = 'base.external.mapping.line'
-
     mapping = fields.Many2One('base.external.mapping', 'External Mapping',
             ondelete='CASCADE')
     field = fields.Many2One('ir.model.field', 'Field',
@@ -305,35 +301,35 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         ('float', 'Float'),
     ], 'External Type', required=True)
     translate = fields.Boolean('Translate',
-            help='Check this option to export fields with locale sufix. ' + \
+        help='Check this option to export fields with locale sufix.'
             'Example: name_en'
     )
     active = fields.Boolean('Active')
     update = fields.Boolean('Exclude Update',
-            help='When update data (write), this field is excluded')
+        help='When update data (write), this field is excluded')
     sequence = fields.Integer('Sequence',
-            help='The order you want to relate columns of the file with' + \
-            ' fields of Tryton.')
+        help='The order you want to relate columns of the file with fields'
+            'of Tryton')
     in_function = fields.Text('Import to Tryton',
-            help='Type the python code for mapping this field.\n' + \
-                'You can use:\n' + \
-                '  * self: To make reference to this mapping record.\n' + \
-                '  * pool: To make reference to the data base objects.\n' + \
-                '  * values: The value of this field.\n' + \
-                'You must return a variable called "result" with the' + \
+            help='Type the python code for mapping this field.\n'
+                'You can use:\n'
+                '  * self: To make reference to this mapping record.\n'
+                '  * pool: To make reference to the data base objects.\n'
+                '  * values: The value of this field.\n'
+                'You must return a variable called "result" with the'
                 ' result of the compute.'
             )
     out_function = fields.Text('Export from Tryton',
-            help='Type the python code for mapping this field.\n' + \
-                'You can use:\n' + \
-                '  * self: To make reference to this mapping record.\n' + \
-                '  * pool: To make reference to the data base objects.\n' + \
-                '  * records: List IDs you call.\n' + \
-                '  * record: ID you call.\n' + \
-                '  * transaction: Transaction()\n' + \
-                '  * context: Dictonary context\n' + \
-                'You must return a variable called "result" with the' + \
-                ' result of the compute.' 
+            help='Type the python code for mapping this field.\n'
+                'You can use:\n'
+                '  * self: To make reference to this mapping record.\n'
+                '  * pool: To make reference to the data base objects.\n'
+                '  * records: List IDs you call.\n'
+                '  * record: ID you call.\n'
+                '  * transaction: Transaction()\n'
+                '  * context: Dictonary context\n'
+                'You must return a variable called "result" with the'
+                ' result of the compute.'
             )
 
     @classmethod
