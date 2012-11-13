@@ -27,20 +27,20 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='trytond_base_external_mapping',
+setup(name='trytonzz_base_external_mapping',
     version=info.get('version', '0.0.1'),
     description='Tryton module to External APP <-> Tryton data',
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='http://www.zikzakmedia.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-base_external_mapping",
-    package_dir={'trytond.modules.base_external_mapping': '.'},
+    download_url="https://bitbucket.org/zikzakmedia/trytonzz-base_external_mapping",
+    package_dir={'trytonzz.modules.base_external_mapping': '.'},
     packages=[
-        'trytond.modules.base_external_mapping',
-        'trytond.modules.base_external_mapping.tests',
+        'trytonzz.modules.base_external_mapping',
+        'trytonzz.modules.base_external_mapping.tests',
     ],
     package_data={
-        'trytond.modules.base_external_mapping': info.get('xml', []) \
+        'trytonzz.modules.base_external_mapping': info.get('xml', []) \
             + ['tryton.cfg', 'locale/*.po'],
     },
     classifiers=[
@@ -63,9 +63,9 @@ setup(name='trytond_base_external_mapping',
     install_requires=requires,
     zip_safe=False,
     entry_points="""
-    [trytond.modules]
-    base_external_mapping = trytond.modules.base_external_mapping
+    [trytonzz.modules]
+    base_external_mapping = trytonzz.modules.base_external_mapping
     """,
     test_suite='tests',
-    test_loader='trytond.test_loader:Loader',
+    test_loader='trytonzz.test_loader:Loader',
 )
