@@ -33,14 +33,14 @@ setup(name='trytonzz_base_external_mapping',
     author='Zikzakmedia SL',
     author_email='zikzak@zikzakmedia.com',
     url='http://www.zikzakmedia.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytonzz-base_external_mapping",
-    package_dir={'trytonzz.modules.base_external_mapping': '.'},
+    download_url="https://bitbucket.org/zikzakmedia/trytond-base_external_mapping",
+    package_dir={'trytond.modules.base_external_mapping': '.'},
     packages=[
-        'trytonzz.modules.base_external_mapping',
-        'trytonzz.modules.base_external_mapping.tests',
+        'trytond.modules.base_external_mapping',
+        'trytond.modules.base_external_mapping.tests',
     ],
     package_data={
-        'trytonzz.modules.base_external_mapping': info.get('xml', []) \
+        'trytond.modules.base_external_mapping': info.get('xml', []) \
             + ['tryton.cfg', 'locale/*.po'],
     },
     classifiers=[
@@ -63,9 +63,9 @@ setup(name='trytonzz_base_external_mapping',
     install_requires=requires,
     zip_safe=False,
     entry_points="""
-    [trytonzz.modules]
-    base_external_mapping = trytonzz.modules.base_external_mapping
+    [trytond.modules]
+    base_external_mapping = trytond.modules.base_external_mapping
     """,
     test_suite='tests',
-    test_loader='trytonzz.test_loader:Loader',
+    test_loader='trytond.test_loader:Loader',
 )
