@@ -49,9 +49,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 'The name of the Mapping must be unique!')]
 
     @classmethod
-    def create(cls, vals):
-        vals['state'] = 'done'
-        return super(BaseExternalMapping, cls).create(vals)
+    def create(cls, vlist):
+        for vals in vlist:
+            vals['state'] = 'done'
+        return super(BaseExternalMapping, cls).create(vlist)
 
     @classmethod
     def copy(cls, records, default=None):

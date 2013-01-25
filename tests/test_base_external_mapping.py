@@ -60,11 +60,11 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             model = Model.search([
                 ('model', '=', 'product.template'),
                 ], limit=1)[0]
-            mapping1 = self.mapping.create({
+            mapping1 = self.mapping.create([{
                 'name': 'mapping.product',
                 'model': model,
                 'state': 'draft'
-                })
+                }])[0]
             self.assert_(mapping1)
             transaction.cursor.commit()
 
@@ -91,14 +91,14 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             mapping_lines = []
             for field in Field.browse(fields):
                 if field.name not in line_number: continue
-                mapping_line = self.mapping_line.create({
+                mapping_line = self.mapping_line.create([{
                     'mapping': mapping1,
                     'field': field.id,
                     'mapping_type': 'in_out',
                     'external_type': field_type[field.ttype],
                     'external_field': field.name,
                     'sequence': line_number[field.name],
-                    })
+                    }])[0]
                 mapping_lines.append(mapping_line)
                 self.assert_(mapping_line)
             transaction.cursor.commit()
@@ -140,7 +140,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
             Category = POOL.get('product.category')
-            category = Category.create({'name': 'Toys'})
+            category = Category.create([{'name': 'Toys'}])[0]
             self.assert_(category)
 
             Uom = POOL.get('product.uom')
@@ -153,7 +153,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                 'rounding': 2,
                 'digits': 2,
             }
-            uom = Uom.create(values)
+            uom = Uom.create([values])[0]
             self.assert_(uom)
 
             Product = POOL.get('product.product')
@@ -166,7 +166,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                 'cost_price_method': 'fixed',
                 'code':'TEST',
             }
-            product = Product.create(values)
+            product = Product.create([values])[0]
             self.assert_(product)
             transaction.cursor.commit()
 
