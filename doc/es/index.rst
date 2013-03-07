@@ -34,6 +34,7 @@ Ejemplo
 Ejemplo de conexión mediante el protocolo XML proporcionado por Proteus:
 
 .. code:: python
+
     from proteus import config, Model, Wizard
     conf = config.set_xmlrpc('http://user:passwd@server:8069/Database')
     Mapping = Model.get('base.external.mapping')
@@ -83,6 +84,7 @@ Ejemplo
 Ejemplo de conexión mediante el protocolo XML proporcionado por Proteus:
 
 .. code:: python
+
     from proteus import config, Model, Wizard
     conf = config.set_xmlrpc('http://user:passwd@server:8069/Database')
     Mapping = Model.get('base.external.mapping')
@@ -107,6 +109,7 @@ Ejemplo
 Para borrar el campo name:
 
 .. code:: python
+
     result = {'nombre': 'Producto 2', 'price': 30.0, 'activo': True}
     result = Mapping.map_del_keys(name, result, conf.context)
     {'price': 30.0, 'acto': True}
@@ -123,6 +126,7 @@ Esta opción sólo está disponible en mapeos Tryton -> Externo. Devuelve el nom
 del campo con el sufijo del locale. Por ejemplo:
 
 .. code:: python
+
     {
         name_en':'Product',
         name_es':'Producto',
@@ -146,6 +150,7 @@ Un ejemplo de método de búsqueda para un campo **Función de entrada** One2Man
 podría ser:
 
 .. code:: python
+
     result = []
     categories = pool.get('product.category').search([('name','=',values)])
     for category in pool.get('product.category').read(categories, ['name']):
@@ -158,6 +163,7 @@ Un ejemplo de método de búsqueda para un campo **Función de entrada** Many2On
 podría ser:
 
 .. code:: python
+
     result = False
     model_obj = pool.get('product.product')
     model_values = model_obj.search([('code','=',values)])
@@ -185,6 +191,7 @@ Ejemplo
 Un ejemplo de método browse para un campo **Función de salida** podría ser:
 
 .. code:: python
+
     with transaction.set_context(**context):
         product = pool.get('product.product').browse(record_id)
         result = product.name
