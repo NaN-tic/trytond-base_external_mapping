@@ -268,6 +268,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
         """
         exclude_lines = []
         mappings = cls.search([('name', '=', name)])
+        logger = logging.getLogger('base_external_mapping')
         if not len(mappings) > 0:
             logger.info('Not code available mapping: %s' % name)
             return False
