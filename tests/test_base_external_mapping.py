@@ -12,6 +12,8 @@ if os.path.isdir(DIR):
     sys.path.insert(0, os.path.dirname(DIR))
 
 import unittest
+from decimal import Decimal
+
 import trytond.tests.test_tryton
 from trytond.tests.test_tryton import POOL, DB_NAME, USER, CONTEXT, test_view,\
     test_depends
@@ -38,6 +40,10 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         trytond.tests.test_tryton.install_module('base_external_mapping')
         self.mapping = POOL.get('base.external.mapping')
         self.mapping_line = POOL.get('base.external.mapping.line')
+        self.uom = POOL.get('product.uom')
+        self.category = POOL.get('product.category')
+        self.template = POOL.get('product.template')
+        self.product = POOL.get('product.product')
 
     def test0005views(self):
         '''
@@ -139,34 +145,23 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         Create Product
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            Category = POOL.get('product.category')
-            category = Category.create([{'name': 'Toys'}])[0]
-            self.assert_(category)
-
-            Uom = POOL.get('product.uom')
-            values = {
-                'name': 'unit',
-                'symbol': 'u',
-                'category': category,
-                'rate': 1,
-                'factor': 1,
-                'rounding': 2,
-                'digits': 2,
-            }
-            uom = Uom.create([values])[0]
-            self.assert_(uom)
-
-            Product = POOL.get('product.product')
-            values = {
-                'name': 'Ball',
-                'list_price': '345.32',
-                'cost_price': '345.32',
-                'type': 'goods',
-                'default_uom': uom,
-                'cost_price_method': 'fixed',
-                'code':'TEST',
-            }
-            product = Product.create([values])[0]
+            uom, = self.uom.search([
+                    ('name', '=', 'Unit'),
+                    ])
+            category, = self.category.create([{
+                    'name': 'Category',
+                    }])
+            template, = self.template.create([{
+                    'name': 'Ball',
+                    'default_uom': uom.id,
+                    'category': category.id,
+                    'type': 'service',
+                    'list_price': Decimal(0),
+                    'cost_price': Decimal(0),
+                    }])
+            product, = self.product.create([{
+                    'template': template.id,
+                    }])
             self.assert_(product)
             transaction.cursor.commit()
 
@@ -183,16 +178,17 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             result = self.mapping.map_external_to_tryton(name, values)
             self.assertEqual(result,  {
                     'name': 'Ball',
-                    'cost_price': 23.5
+                    'cost_price': 23.50,
                 })
+            transaction.cursor.commit()
 
     def test0070map_tryton_to_external(self):
         '''
         Map tryton data to external dictionary (to export the record)
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
-            records = POOL.get('product.product').search([
-                ('code', '=', 'TEST'),
+            records = POOL.get('product.template').search([
+                ('name', '=', 'Ball'),
                 ], limit=1)
             name = 'mapping.product'
             ids = [record.id for record in records]
@@ -200,8 +196,8 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             self.assertEqual(result, [{
                     'id': 1, 
                     'name_en': 'Ball',
-                    'cost_price': 345.32,
                 }])
+            transaction.cursor.commit()
 
     def test0080map_exclude_update(self):
         '''
@@ -215,6 +211,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                     'active': True,
                     'cost_price': 30.0,
                 })
+            transaction.cursor.commit()
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
