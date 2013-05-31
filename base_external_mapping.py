@@ -245,13 +245,19 @@ class BaseExternalMapping(ModelSQL, ModelView):
                                 data_value.append(val.id)
                     else:
                         data_value = getattr(model, field)
-                    if ttype == 'char' and not data_value:
-                        data_value = ''
-                    external_field = mapping_line.external_field
-                    if ttype == 'boolean' and not data_value:
-                        data_values[external_field] = False
+
                     if ttype == 'numeric':
                         data_value = float(data_value)
+
+                    external_field = mapping_line.external_field
+
+                    if ttype == 'char' and not data_value:
+                        data_values[external_field] = ''
+                    if ttype == 'boolean' and not data_value:
+                        data_values[external_field] = False
+                    if ttype == 'selection' and not data_value:
+                        data_values[external_field] = ''
+
                     if data_value:
                         data_values[external_field] = data_value
             res.append(data_values)
