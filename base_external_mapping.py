@@ -214,7 +214,9 @@ class BaseExternalMapping(ModelSQL, ModelView):
                                 trans_value
                 else:
                     ttype = mapping_line.field.ttype
+                    external_field = mapping_line.external_field
                     out_function = mapping_line.out_function
+
                     if out_function:
                         localspace = {
                             "self": cls,
@@ -230,8 +232,9 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             logger.error('Unknown Error exporting line with'
                                 ' id %s. Message: %s' % (mapping_line.id, e))
                             return False
-                        data_value = 'result' in localspace and \
-                                localspace['result'] or False
+                        data_value = localspace.get('result')
+                        if not data_value:
+                            data_values[external_field] = ''
                     elif ttype in relational_fields:
                         if ttype == 'many2one':
                             data_value = getattr(model, field)
@@ -248,8 +251,6 @@ class BaseExternalMapping(ModelSQL, ModelView):
 
                     if ttype == 'numeric':
                         data_value = float(data_value)
-
-                    external_field = mapping_line.external_field
 
                     if ttype == 'char' and not data_value:
                         data_values[external_field] = ''
