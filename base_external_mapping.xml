@@ -80,8 +80,8 @@ copyright notices and license terms. -->
                     <field name="sequence"/>
                     <label name="translate"/>
                     <field name="translate"/>
-                    <label name="update"/>
-                    <field name="update"/>
+                    <label name="exclude_update"/>
+                    <field name="exclude_update"/>
                     <label name="mapping"/>
                     <field name="mapping"/>
                     <newline/>
@@ -107,7 +107,7 @@ copyright notices and license terms. -->
                     <field name="mapping_type"/>
                     <field name="external_type"/>
                     <field name="translate"/>
-                    <field name="update"/>
+                    <field name="exclude_update"/>
                     <field name="active"/>
                 </tree>
                 ]]>

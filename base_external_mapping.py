@@ -280,7 +280,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
             logger.info('Not code available mapping: %s' % name)
             return False
         for line in cls(mappings[0]).mapping_lines:
-            if line.update:
+            if line.exclude_update:
                 exclude_lines.append(line.field.name)
         for line in exclude_lines:
             if line in values:
@@ -314,7 +314,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
             'Example: name_en'
     )
     active = fields.Boolean('Active')
-    update = fields.Boolean('Exclude Update',
+    exclude_update = fields.Boolean('Exclude Update',
         help='When update data (write), this field is excluded')
     sequence = fields.Integer('Sequence',
         help='The order you want to relate columns of the file with fields'
