@@ -124,7 +124,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                 ])
             self.mapping_line.write(mapping_lines, {
                     'translate': True,
-                    'update': True,
+                    'exclude_update': True,
                 })
             transaction.cursor.commit()
 
