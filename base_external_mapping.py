@@ -350,6 +350,14 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     def default_active():
         return True
 
+    @staticmethod
+    def default_mapping_type():
+        return 'in'
+
+    @staticmethod
+    def default_external_type():
+        return 'str'
+
     def on_change_field(self):
         if self.field:
             return {'name': self.field.name}
