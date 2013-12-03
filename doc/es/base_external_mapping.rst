@@ -1,18 +1,58 @@
-==================
-Mapeo externo base
-==================
+=====================================
+Base External Mapping (Mapeo externo)
+=====================================
 
-Este módulo permite la conversión de datos de externos a Tryton y de Tryton a
-externos. Es un módulo técnico creador para plataformas de comercio electrónico
-como e-Sale o Magento donde se requiere un mapeo de campos y cálculos de estos.
+Este módulo permite la conversión de datos de aplicaciones externas a Tryton y de Tryton a
+externas aplicaciones. Es un módulo técnico creador para plataformas de comercio electrónico
+como e-Sale o Magento donde se requiere un mapeo de campos y cálculos de estos. También se usa
+este módulo para la importación de ficheros CSV complejos.
 
-Configuración
-=============
-
-La configuración del módulo se realiza a través del menú |menu_base_external_mapping|\ .
+La configuración del módulo se realiza a través del menú |menu_base_external_mapping|. 
 Todos los mapeos están relacionados con un modelo (producto, tercero, etc...).
 
 .. |menu_base_external_mapping| tryref:: base_external_mapping.base_external_mapping_menu/complete_name
+
+Mapeo
+-----
+
+Un mapeo nos pemite relacionar con que objecto va relacionado y los campos de Tryton a que
+campos "exterior" corresponen (campo tryton <-> campo externo).
+
+Cada campo de podemos marcar en que dirección lo queremos calcular:
+
+* campo tryton <-> campo externo
+* campo tryton -> campo externo
+* campo tryton <- campo externo
+
+Ejemplos
+--------
+
+Mapeo Tercero
+-------------
+
+El mapeo del tercero irá relacionado con el modelo "party". En las líneas del mapeo relacionaremos
+los campos de Tryton con los campos externos (campo tryton <-> campo externo). Por ejemplo, el campo
+de Tryton y un campo externo podría ser:
+
+* name <-> nombre
+* vat_number <-> cif
+* reference <-> code
+
+Otra de las funcionalidades del Base External Mapping es hacer búsquedas o cálculos con los datos. En los campos
+"Importar a Tryton" o "Exportar a Tryton" podemos añadir código del framework de Tryton para cálculos. En este
+ejemplo buscaremos productos por código.
+
+.. code-block:: python
+
+    result = None
+    Product = pool.get('product.product')
+    products = Product.search([('code', '=', values)])
+    if products:
+        result = products[0]
+
+=======
+Técnico
+=======
 
 Cómo llamar estos métodos
 =========================
