@@ -28,7 +28,7 @@ Ejemplos
 --------
 
 Mapeo Tercero
--------------
+#############
 
 El mapeo del tercero irá relacionado con el modelo "party". En las líneas del mapeo relacionaremos
 los campos de Tryton con los campos externos (campo tryton <-> campo externo). Por ejemplo, el campo
