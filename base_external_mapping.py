@@ -7,6 +7,7 @@ from trytond.pool import Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
+from datetime import datetime
 import logging
 
 __all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
@@ -146,6 +147,11 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         result = True
                     else:
                         result = False
+                if mapping_line.external_type == 'date':
+                    try:
+                        result = datetime.strptime(result, '%Y-%m-%d')
+                    except:
+                        pass
                 results[mapping_line.field.name] = result
         return results
 
@@ -308,6 +314,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         ('bool', 'Boolean'),
         ('int', 'Integer'),
         ('float', 'Float'),
+        ('date', 'Date'),
     ], 'External Type', required=True)
     translate = fields.Boolean('Translate',
         help='Check this option to export fields with locale sufix.'
