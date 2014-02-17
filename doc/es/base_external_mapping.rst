@@ -50,9 +50,9 @@ ejemplo buscaremos productos por código.
     if products:
         result = products[0]
 
-=======
-Técnico
-=======
+==============================
+Base External Mapping. Técnico
+==============================
 
 Cómo llamar estos métodos
 =========================
