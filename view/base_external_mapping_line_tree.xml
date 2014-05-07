@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- This file is part of base_external_mapping module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full
+copyright notices and license terms. -->
+<tree string="Mapping Line" sequence="sequence">
+    <field name="sequence"/>
+    <field name="mapping"/>
+    <field name="field"/>
+    <field name="external_field"/>
+    <field name="mapping_type"/>
+    <field name="external_type"/>
+    <field name="translate"/>
+    <field name="exclude_update"/>
+    <field name="active"/>
+</tree>

@@ -8,33 +8,12 @@ copyright notices and license terms. -->
         <record model="ir.ui.view" id="base_external_mapping_form_view">
             <field name="model">base.external.mapping</field>
             <field name="type">form</field>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <form string="Mapping" col="6">
-                    <label name="name"/>
-                    <field name="name"/>
-                    <label name="model"/>
-                    <field name="model"/>
-                    <field name="mapping_lines" colspan="6"/>
-                    <label name="state"/>
-                    <field name="state"/>
-                </form>
-                ]]>
-            </field>
+            <field name="name">base_external_mapping_form</field>
         </record>
-
         <record model="ir.ui.view" id="base_external_mapping_tree_view">
             <field name="model">base.external.mapping</field>
             <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <tree string="Mapping">
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="state"/>
-                </tree>
-                ]]>
-            </field>
+            <field name="name">base_external_mapping_tree</field>
         </record>
 
         <record model="ir.action.act_window" id="base_external_mapping_act">
@@ -63,55 +42,12 @@ copyright notices and license terms. -->
         <record model="ir.ui.view" id="base_external_mapping_line_form_view">
             <field name="model">base.external.mapping.line</field>
             <field name="type">form</field>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <form string="Mapping Line" col="8">
-                    <label name="field"/>
-                    <field name="field" colspan="2"/>
-                    <label name="mapping_type"/>
-                    <field name="mapping_type" colspan="2"/>
-                    <label name="active"/>
-                    <field name="active"/>
-                    <label name="external_field"/>
-                    <field name="external_field" colspan="2"/>
-                    <label name="external_type"/>
-                    <field name="external_type" colspan="2"/>
-                    <label name="sequence"/>
-                    <field name="sequence"/>
-                    <label name="translate"/>
-                    <field name="translate"/>
-                    <label name="exclude_update"/>
-                    <field name="exclude_update"/>
-                    <label name="mapping"/>
-                    <field name="mapping"/>
-                    <newline/>
-                    <separator name="in_function" colspan="8"/>
-                    <field name="in_function" colspan="8"/>
-                    <separator name="out_function" colspan="8"/>
-                    <field name="out_function" colspan="8"/>
-                </form>
-                ]]>
-            </field>
+            <field name="name">base_external_mapping_line_form</field>
         </record>
-
         <record model="ir.ui.view" id="base_external_mapping_line_tree_view">
             <field name="model">base.external.mapping.line</field>
             <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <![CDATA[
-                <tree string="Mapping Line">
-                    <field name="sequence"/>
-                    <field name="mapping"/>
-                    <field name="field"/>
-                    <field name="external_field"/>
-                    <field name="mapping_type"/>
-                    <field name="external_type"/>
-                    <field name="translate"/>
-                    <field name="exclude_update"/>
-                    <field name="active"/>
-                </tree>
-                ]]>
-            </field>
+            <field name="name">base_external_mapping_line_tree</field>
         </record>
 
         <record model="ir.action.act_window" id="act_mapping_lines_form">
