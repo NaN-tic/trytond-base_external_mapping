@@ -152,6 +152,15 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         result = datetime.strptime(result, '%Y-%m-%d')
                     except:
                         pass
+
+                # Add in dict all fields type dict
+                if mapping_line.field.ttype == 'dict':
+                    old_result = {}
+                    if mapping_line.field.name in results:
+                        old_result = results.get(mapping_line.field.name)
+                    new_result = {mapping_line.external_field: result}
+                    result = dict(old_result.items() + new_result.items())
+
                 results[mapping_line.field.name] = result
         return results
 
