@@ -24,27 +24,23 @@ msgstr ""
 
 msgctxt "field:base.external.mapping,create_date:"
 msgid "Create Date"
-msgstr "Data de creació"
+msgstr "Data creació"
 
 msgctxt "field:base.external.mapping,create_uid:"
 msgid "Create User"
-msgstr "Usuari de creació"
+msgstr "Usuari creació"
 
 msgctxt "field:base.external.mapping,id:"
 msgid "ID"
-msgstr "Id"
+msgstr "ID"
 
 msgctxt "field:base.external.mapping,mapping_lines:"
 msgid "Mapping Lines"
-msgstr "Línies d'assignació"
+msgstr "Línies Mapping"
 
 msgctxt "field:base.external.mapping,model:"
 msgid "Model"
 msgstr "Model"
-
-msgctxt "field:base.external.mapping,model_name:"
-msgid "Model Name"
-msgstr "Nom del model"
 
 msgctxt "field:base.external.mapping,name:"
 msgid "Code"
@@ -60,11 +56,11 @@ msgstr "Estat"
 
 msgctxt "field:base.external.mapping,write_date:"
 msgid "Write Date"
-msgstr "Data d'escriptura"
+msgstr "Data modificació"
 
 msgctxt "field:base.external.mapping,write_uid:"
 msgid "Write User"
-msgstr "Usuari d'escriptura"
+msgstr "Usuari modificació"
 
 msgctxt "field:base.external.mapping.line,active:"
 msgid "Active"
@@ -72,11 +68,15 @@ msgstr "Actiu"
 
 msgctxt "field:base.external.mapping.line,create_date:"
 msgid "Create Date"
-msgstr "Data de creació"
+msgstr "Data creació"
 
 msgctxt "field:base.external.mapping.line,create_uid:"
 msgid "Create User"
-msgstr "Usuari de creació"
+msgstr "Usuari creació"
+
+msgctxt "field:base.external.mapping.line,exclude_update:"
+msgid "Exclude Update"
+msgstr "Excloure actualització"
 
 msgctxt "field:base.external.mapping.line,external_field:"
 msgid "External Field"
@@ -92,7 +92,7 @@ msgstr "Camp"
 
 msgctxt "field:base.external.mapping.line,id:"
 msgid "ID"
-msgstr "Id"
+msgstr "ID"
 
 msgctxt "field:base.external.mapping.line,in_function:"
 msgid "Import to Tryton"
@@ -100,15 +100,11 @@ msgstr "Importar a Tryton"
 
 msgctxt "field:base.external.mapping.line,mapping:"
 msgid "External Mapping"
-msgstr "Assignació extern"
+msgstr "External Mapping"
 
 msgctxt "field:base.external.mapping.line,mapping_type:"
 msgid "Type"
 msgstr "Tipus"
-
-msgctxt "field:base.external.mapping.line,name:"
-msgid "Name"
-msgstr "Nom"
 
 msgctxt "field:base.external.mapping.line,out_function:"
 msgid "Export from Tryton"
@@ -116,7 +112,7 @@ msgstr "Exporta des de Tryton"
 
 msgctxt "field:base.external.mapping.line,rec_name:"
 msgid "Name"
-msgstr "Nom del camp"
+msgstr "Nom"
 
 msgctxt "field:base.external.mapping.line,sequence:"
 msgid "Sequence"
@@ -126,21 +122,21 @@ msgctxt "field:base.external.mapping.line,translate:"
 msgid "Translate"
 msgstr "Traduir"
 
-msgctxt "field:base.external.mapping.line,update:"
-msgid "Exclude Update"
-msgstr "Exclou actualització"
-
 msgctxt "field:base.external.mapping.line,write_date:"
 msgid "Write Date"
-msgstr "Data d'escriptura"
+msgstr "Data modificació"
 
 msgctxt "field:base.external.mapping.line,write_uid:"
 msgid "Write User"
-msgstr "Usuari d'escriptura"
+msgstr "Usuari modificació"
 
 msgctxt "help:base.external.mapping,name:"
 msgid "Use lowercase, az09 characters and separated by . (dot)"
 msgstr "Utilitzeu minúscules, caràcters az09 i separat per . (punt)"
+
+msgctxt "help:base.external.mapping.line,exclude_update:"
+msgid "When update data (write), this field is excluded"
+msgstr "Quan s'actualitza dades (write) aquest camp serà exclòs."
 
 msgctxt "help:base.external.mapping.line,in_function:"
 msgid ""
@@ -171,8 +167,8 @@ msgid ""
 "You can use:\n"
 "  * self: To make reference to this mapping record.\n"
 "  * pool: To make reference to the data base objects.\n"
-"  * record_ids: List IDs you call.\n"
-"  * record_id: ID you call.\n"
+"  * records: List IDs you call.\n"
+"  * record: ID you call.\n"
 "  * transaction: Transaction()\n"
 "  * context: Dictonary context\n"
 "You must return a variable called \"result\" with the result of the compute."
@@ -185,21 +181,16 @@ msgstr ""
 "Heu de retornar una variable anomenada \"result\" amb el resultat del càlcul."
 
 msgctxt "help:base.external.mapping.line,sequence:"
-msgid ""
-"The order you want to relate columns of the file with fields of Tryton."
+msgid "The order you want to relate columns of the file with fieldsof Tryton"
 msgstr ""
 "L'ordre en el que voleu relacinar les columnes del fitxer amb els camps de "
 "Tryton."
 
 msgctxt "help:base.external.mapping.line,translate:"
-msgid "Check this option to export fields with locale sufix. Example: name_en"
+msgid "Check this option to export fields with locale sufix.Example: name_en"
 msgstr ""
 "Marqueu aquesta opció per exportar camps amb sufix local. Per exemple: "
 "name_ca"
-
-msgctxt "help:base.external.mapping.line,update:"
-msgid "When update data (write), this field is excluded"
-msgstr "Quan actualitzeu una dada (escribiu), aquest camp quedarà exclós."
 
 msgctxt "model:base.external.mapping,name:"
 msgid "Base External Mapping"
@@ -209,19 +200,11 @@ msgctxt "model:base.external.mapping.line,name:"
 msgid "Base External Mapping Line"
 msgstr "Base External Mapping Line"
 
-msgctxt "model:ir.action,name:None"
-msgid "Base External Mapping"
-msgstr "Base External Mapping"
+msgctxt "model:ir.action,name:act_mapping_lines_form"
+msgid "Lines"
+msgstr "Linies"
 
 msgctxt "model:ir.action,name:base_external_mapping_act"
-msgid "Base External Mapping"
-msgstr "Base External Mapping"
-
-msgctxt "model:ir.ui.menu,name:None"
-msgid "Base External Mapping"
-msgstr "Base External Mapping"
-
-msgctxt "model:ir.ui.menu,name:None"
 msgid "Base External Mapping"
 msgstr "Base External Mapping"
 
@@ -231,7 +214,7 @@ msgstr "Base External Mapping"
 
 msgctxt "selection:base.external.mapping,state:"
 msgid "Done"
-msgstr "Procès"
+msgstr "Realitzat"
 
 msgctxt "selection:base.external.mapping,state:"
 msgid "Draft"
@@ -240,6 +223,10 @@ msgstr "Esborrany"
 msgctxt "selection:base.external.mapping.line,external_type:"
 msgid "Boolean"
 msgstr "Booleà"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Date"
+msgstr "Data"
 
 msgctxt "selection:base.external.mapping.line,external_type:"
 msgid "Float"
@@ -267,8 +254,8 @@ msgstr "Tryton <-> Exterior"
 
 msgctxt "view:base.external.mapping.line:"
 msgid "Mapping Line"
-msgstr "Línia de mapeig"
+msgstr "Línia Mapping"
 
 msgctxt "view:base.external.mapping:"
 msgid "Mapping"
-msgstr "Mapeig"
+msgstr "Mapping"
