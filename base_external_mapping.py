@@ -264,9 +264,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     else:
                         data_value = getattr(model, field)
 
-                    if ttype == 'numeric':
-                        data_value = float(data_value)
-
+                    if ttype == 'numeric' and not data_value:
+                        data_values[external_field] = ''
                     if ttype == 'char' and not data_value:
                         data_values[external_field] = ''
                     if ttype == 'boolean' and not data_value:
