@@ -273,6 +273,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     if ttype == 'selection' and not data_value:
                         data_values[external_field] = ''
 
+                    # Extract dict value
+                    if mapping_line.field.ttype == 'dict' and data_value:
+                        data_value = data_value.get(external_field)
+
                     if data_value:
                         data_values[external_field] = data_value
             res.append(data_values)
