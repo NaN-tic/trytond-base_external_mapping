@@ -194,8 +194,9 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             ids = [record.id for record in records]
             result = self.mapping.map_tryton_to_external(name, ids)
             self.assertEqual(result, [{
-                    'id': 1, 
+                    'id': 1,
                     'name_en': 'Ball',
+                    'cost_price': '',
                 }])
             transaction.cursor.commit()
 
