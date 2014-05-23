@@ -314,8 +314,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     field = fields.Many2One('ir.model.field', 'Field',
         domain=[('model', '=', Eval('_parent_mapping', {}).get('model'))],
         select=True, required=True)
-    external_field = fields.Char('External Field', required=True,
-            on_change=['field', 'external_field'],)
+    external_field = fields.Char('External Field', required=True)
     mapping_type = fields.Selection([
         ('in', 'Tryton <- External'),
         ('in_out', 'Tryton <-> External'),
@@ -387,5 +386,6 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         else:
             return {'name': self.external_field}
 
+    @fields.depends('field', 'external_field')
     def on_change_external_field(self):
         return self.on_change_field()
