@@ -107,7 +107,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     localspace = {
                         "self": cls,
                         "pool": Pool(),
-                        "values": values[mapping_line.external_field],
+                        "value": values[mapping_line.external_field],
+                        "values": values,
                     }
                     with Transaction().set_context(**context):
                         try:
@@ -342,7 +343,8 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
                 'You can use:\n'
                 '  * self: To make reference to this mapping record.\n'
                 '  * pool: To make reference to the data base objects.\n'
-                '  * values: The value of this field.\n'
+                '  * value: The value of this field.\n'
+                '  * values: Values dict (key is from external data).\n'
                 'You must return a variable called "result" with the'
                 ' result of the compute.'
             )
