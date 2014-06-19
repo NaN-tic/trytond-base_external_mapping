@@ -150,18 +150,25 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             # raises an error too, so it could be necessary
                             # to make a commit or a roolback. I don't know yet.
                         except SyntaxError, e:
-                            logger.error('Syntax Error in mapping %s, line %s. Error: %s' %
-                                (mapping_line.mapping.name, mapping_line.field.name, e))
+                            logger.error('Syntax Error in mapping %s, line %s.'
+                                ' Error: %s' %
+                                (mapping_line.mapping.name,
+                                    mapping_line.field.name, e))
                             return False
                         except NameError, e:
-                            logger.error('Syntax Error in mapping %s, line %s. Error: %s' %
-                                (mapping_line.mapping.name, mapping_line.field.name, e))
+                            logger.error('Syntax Error in mapping %s, line %s.'
+                                ' Error: %s' %
+                                (mapping_line.mapping.name,
+                                    mapping_line.field.name, e))
                             return False
                         except Exception, e:
-                            logger.error('Unknown Error in mapping %s, line %s. Message: %s' %
-                                (mapping_line.mapping.name, mapping_line.field.name, e))
+                            logger.error('Unknown Error in mapping %s, line '
+                                '%s. Message: %s' %
+                                (mapping_line.mapping.name,
+                                    mapping_line.field.name, e))
                             return False
-                        result = localspace['result'] if 'result' in localspace else False
+                        result = (localspace['result']
+                            if 'result' in localspace else False)
                 else:
                     result = values[mapping_line.external_field]
                 # Force type of result to be float, int or bool (def is str)
@@ -253,7 +260,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
                                 ('res_id', '=', record)
                             ])
                             if trans_ids:
-                                translation = Pool().get('ir.translation')(trans_ids[0])
+                                translation = Pool().get('ir.translation')(
+                                    trans_ids[0])
                                 trans_value = translation.value
                             else:
                                 trans_value = getattr(model, field, '')
