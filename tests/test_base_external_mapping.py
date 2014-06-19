@@ -30,6 +30,7 @@ field_type = {
     u'numeric': 'str'
 }
 
+
 class BaseExternalMappingTestCase(unittest.TestCase):
     '''
     Test BaseExternalMapping module.
@@ -132,13 +133,12 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         Copy Mapping.
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
             mapping1 = self.mapping.search([
                 ('name', '=', 'mapping.product'),
                 ], limit=1)
             mapping2 = self.mapping.copy(mapping1)
             self.assert_(mapping2)
-            transaction.cursor.commit()
 
     def test0050create_product(self):
         '''
@@ -169,7 +169,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         Map external data to tryton dictionary value (to import the record)
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
             name = 'mapping.product'
             values= {
                 'name': 'Ball',
@@ -180,13 +180,12 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                     'name': 'Ball',
                     'cost_price': 23.50,
                 })
-            transaction.cursor.commit()
 
     def test0070map_tryton_to_external(self):
         '''
         Map tryton data to external dictionary (to export the record)
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
             records = POOL.get('product.template').search([
                 ('name', '=', 'Ball'),
                 ], limit=1)
@@ -198,13 +197,12 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                     'name_en': 'Ball',
                     'cost_price': '',
                 }])
-            transaction.cursor.commit()
 
     def test0080map_exclude_update(self):
         '''
         Delete key from dict
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER, context=CONTEXT):
             name = 'mapping.product'
             result = {'name': 'Ball', 'cost_price': 30.0, 'active': True}
             result = self.mapping.map_exclude_update(name, result)
@@ -212,7 +210,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                     'active': True,
                     'cost_price': 30.0,
                 })
-            transaction.cursor.commit()
+
 
 def suite():
     suite = trytond.tests.test_tryton.suite()
