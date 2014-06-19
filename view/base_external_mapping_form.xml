@@ -7,6 +7,11 @@ copyright notices and license terms. -->
     <field name="name"/>
     <label name="model"/>
     <field name="model"/>
+    <newline/>
+    <label name="render_tags"/>
+    <field name="render_tags"/>
+    <label name="engine"/>
+    <field name="engine"/>
     <field name="mapping_lines" colspan="6"/>
     <label name="state"/>
     <field name="state"/>
