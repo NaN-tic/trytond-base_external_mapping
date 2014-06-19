@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #This file is part base_external_mapping module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains 
+#The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
 
 import sys
@@ -62,15 +62,17 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         Create Mapping.
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
             Model = POOL.get('ir.model')
+
             model = Model.search([
                 ('model', '=', 'product.template'),
                 ], limit=1)[0]
             mapping1 = self.mapping.create([{
                 'name': 'mapping.product',
                 'model': model,
-                'state': 'draft'
+                'state': 'draft',
                 }])[0]
             self.assert_(mapping1)
             transaction.cursor.commit()
@@ -83,7 +85,8 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             'name': 1,
             'cost_price': 2,
         }
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
             Model = POOL.get('ir.model')
             models = Model.search([
                 ('model', 'in', ('product.product', 'product.template')),
@@ -97,7 +100,8 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                 ], limit=1)[0]
             mapping_lines = []
             for field in Field.browse(fields):
-                if field.name not in line_number: continue
+                if field.name not in line_number:
+                    continue
                 mapping_line = self.mapping_line.create([{
                     'mapping': mapping1,
                     'field': field.id,
@@ -119,7 +123,8 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         Write Mapping Line.
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
             mapping_lines = self.mapping_line.search([
                 ('field', '=', 'name'),
                 ])
@@ -144,7 +149,8 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         Create Product
         '''
-        with Transaction().start(DB_NAME, USER, context=CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER,
+                context=CONTEXT) as transaction:
             uom, = self.uom.search([
                     ('name', '=', 'Unit'),
                     ])
@@ -171,7 +177,7 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT):
             name = 'mapping.product'
-            values= {
+            values = {
                 'name': 'Ball',
                 'cost_price': 23.50,
             }
