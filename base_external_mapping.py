@@ -1,14 +1,22 @@
 #This file is part of base_external_mapping module for Tryton.
 #The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
-
+from genshi.template import NewTextTemplate as TextTemplate
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
-from trytond.pyson import Eval
+from trytond.pyson import Bool, Eval, Not
+from trytond.tools import safe_eval
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
 from datetime import datetime
 import logging
+try:
+    from jinja2 import Template as Jinja2Template
+    jinja2_loaded = True
+except ImportError:
+    jinja2_loaded = False
+    logging.getLogger('electronic_mail_template').error(
+        'Unable to import jinja2. Install jinja2 package.')
 
 __all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
 
@@ -33,6 +41,11 @@ class BaseExternalMapping(ModelSQL, ModelView):
     state = fields.Selection(
         [('draft', 'Draft'), ('done', 'Done')],
         "State", required=True, readonly=True)
+    render_tags = fields.Boolean('Render Tags')
+    engine = fields.Selection('get_engines', 'Engine', states={
+            'required': Bool(Eval('render_tags')),
+            'invisible': Not(Bool(Eval('render_tags'))),
+            })
 
     @classmethod
     def __setup__(cls):
@@ -48,6 +61,25 @@ class BaseExternalMapping(ModelSQL, ModelView):
             })
         cls._sql_constraints += [('name_uniq', 'UNIQUE (name)',
                 'The name of the Mapping must be unique!')]
+
+    @staticmethod
+    def default_engine():
+        '''Default Engine'''
+        return 'genshi'
+
+    @classmethod
+    def get_engines(cls):
+        '''Returns the engines as list of tuple
+
+        :return: List of tuples
+        '''
+        engines = [
+            ('python', 'Python'),
+            ('genshi', 'Genshi'),
+            ]
+        if jinja2_loaded:
+            engines.append(('jinja2', 'Jinja2'))
+        return engines
 
     @classmethod
     def create(cls, vlist):
@@ -210,6 +242,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     continue
                 field = mapping_line.field.name
                 external_field = mapping_line.external_field
+                ttype = mapping_line.field.ttype
                 if mapping_line.translate:
                     for lang in langs:
                         if lang != 'en_US':
@@ -223,13 +256,18 @@ class BaseExternalMapping(ModelSQL, ModelView):
                                 translation = Pool().get('ir.translation')(trans_ids[0])
                                 trans_value = translation.value
                             else:
-                                trans_value = getattr(model, field) or ''
+                                trans_value = getattr(model, field, '')
                         else:
-                            trans_value = getattr(model, field) or ''
-                        data_values[external_field + '_' + lang[:2]] = \
-                                trans_value
+                            trans_value = getattr(model, field, '')
+                        if (ttype in ('char', 'text')
+                                and external_mapping.render_tags):
+                            data_values[external_field + '_' + lang[:2]] = (
+                                external_mapping.eval(getattr(model, field),
+                                        model))
+                        else:
+                            data_values[external_field + '_' + lang[:2]] = (
+                                    trans_value)
                 else:
-                    ttype = mapping_line.field.ttype
                     external_field = mapping_line.external_field
                     out_function = mapping_line.out_function
 
@@ -279,7 +317,12 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         data_value = data_value.get(external_field)
 
                     if data_value:
-                        data_values[external_field] = data_value
+                        if (ttype in ('char', 'text')
+                                and external_mapping.render_tags):
+                            data_values[external_field] = (
+                                external_mapping.eval(data_value, model))
+                        else:
+                            data_values[external_field] = data_value
             res.append(data_values)
         return res
 
@@ -305,6 +348,53 @@ class BaseExternalMapping(ModelSQL, ModelView):
             if line in values:
                 del values[line]
         return values
+
+    def eval(self, expression, record):
+        '''Evaluates the given :attr:expression
+
+        :param template: Browse record of the template
+        :param expression: Expression to evaluate
+        :param record: The browse record of the record
+        '''
+        engine_method = getattr(self, '_engine_' + self.engine)
+        return engine_method(expression, record)
+
+    def template_context(self, record):
+        """ Generate the template context
+        This is mainly to assist in the inheritance pattern
+        """
+        return {'record': record}
+
+    def _engine_python(self, expression, record):
+        '''Evaluate the pythonic expression and return its value
+        '''
+        if expression is None:
+            return u''
+        assert self is not None, 'Record is undefined'
+        template_context = self.template_context()
+        return safe_eval(expression, template_context)
+
+    def _engine_genshi(self, expression, record):
+        '''
+        :param expression: Expression to evaluate
+        :param record: Browse record
+        '''
+        if not expression:
+            return u''
+        template = TextTemplate(expression)
+        template_context = self.template_context(record)
+        return template.generate(**template_context).render(encoding='UTF-8')
+
+    def _engine_jinja2(self, expression, record):
+        '''
+        :param expression: Expression to evaluate
+        :param record: Browse record
+        '''
+        if not expression:
+            return u''
+        template = Jinja2Template(expression)
+        template_context = self.template_context()
+        return template.render(template_context).encode('utf-8')
 
 
 class BaseExternalMappingLine(ModelSQL, ModelView):
