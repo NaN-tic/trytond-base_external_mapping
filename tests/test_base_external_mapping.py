@@ -27,7 +27,8 @@ field_type = {
     u'one2many': 'str',
     u'many2many': 'str',
     u'integer': 'int',
-    u'numeric': 'str'
+    u'numeric': 'str',
+    u'text': 'str',
 }
 
 
@@ -75,16 +76,25 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                 'state': 'draft',
                 }])[0]
             self.assert_(mapping1)
+
+            model = Model.search([
+                ('model', '=', 'product.product'),
+                ], limit=1)[0]
+            mapping1 = self.mapping.create([{
+                'name': 'mapping.product.variant',
+                'model': model,
+                'state': 'draft',
+                'render_tags': True,
+                'engine': 'genshi',
+                }])[0]
+            self.assert_(mapping1)
+
             transaction.cursor.commit()
 
     def test0020create_mapping_lines(self):
         '''
         Create Mapping Line.
         '''
-        line_number = {
-            'name': 1,
-            'cost_price': 2,
-        }
         with Transaction().start(DB_NAME, USER,
                 context=CONTEXT) as transaction:
             Model = POOL.get('ir.model')
@@ -95,6 +105,11 @@ class BaseExternalMappingTestCase(unittest.TestCase):
             fields = Field.search([
                 ('model', 'in', models),
                 ])
+
+            line_number = {
+                'name': 1,
+                'cost_price': 2,
+            }
             mapping1 = self.mapping.search([
                 ('name', '=', 'mapping.product'),
                 ], limit=1)[0]
@@ -118,6 +133,35 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                 ])
             mapping = mappings[0]
             self.assertEqual(mapping, mapping1)
+
+            line_number = {
+                'template': 1,
+                'code': 2,
+                'description': 3,
+            }
+            mapping2 = self.mapping.search([
+                ('name', '=', 'mapping.product.variant'),
+                ], limit=1)[0]
+            mapping_lines = []
+            for field in Field.browse(fields):
+                if field.name not in line_number:
+                    continue
+                mapping_line = self.mapping_line.create([{
+                    'mapping': mapping2,
+                    'field': field.id,
+                    'mapping_type': 'in_out',
+                    'external_type': field_type[field.ttype],
+                    'external_field': field.name,
+                    'sequence': line_number[field.name],
+                    }])[0]
+                mapping_lines.append(mapping_line)
+                self.assert_(mapping_line)
+            mappings = self.mapping.search([
+                ('mapping_lines', 'in', mapping_lines),
+                ])
+            mapping = mappings[0]
+            self.assertEqual(mapping, mapping2)
+            transaction.cursor.commit()
 
     def test0030write_mapping_line(self):
         '''
@@ -167,6 +211,8 @@ class BaseExternalMappingTestCase(unittest.TestCase):
                     }])
             product, = self.product.create([{
                     'template': template.id,
+                    'code': '123456789012',
+                    'description': 'Description of the product ${record.code}',
                     }])
             self.assert_(product)
             transaction.cursor.commit()
@@ -192,16 +238,29 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         Map tryton data to external dictionary (to export the record)
         '''
         with Transaction().start(DB_NAME, USER, context=CONTEXT):
-            records = POOL.get('product.template').search([
+            templates = POOL.get('product.template').search([
                 ('name', '=', 'Ball'),
                 ], limit=1)
             name = 'mapping.product'
-            ids = [record.id for record in records]
-            result = self.mapping.map_tryton_to_external(name, ids)
+            template_ids = [t.id for t in templates]
+            result = self.mapping.map_tryton_to_external(name, template_ids)
             self.assertEqual(result, [{
                     'id': 1,
                     'name_en': 'Ball',
                     'cost_price': '',
+                }])
+
+            products = POOL.get('product.product').search([
+                    ('template', 'in', template_ids),
+                    ], limit=1)
+            name = 'mapping.product.variant'
+            product_ids = [p.id for p in products]
+            result = self.mapping.map_tryton_to_external(name, product_ids)
+            self.assertEqual(result, [{
+                    'id': product_ids[0],
+                    'template': template_ids[0],
+                    'code': '123456789012',
+                    'description': 'Description of the product 123456789012',
                 }])
 
     def test0080map_exclude_update(self):
