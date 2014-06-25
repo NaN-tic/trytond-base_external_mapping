@@ -30,6 +30,10 @@ msgctxt "field:base.external.mapping,create_uid:"
 msgid "Create User"
 msgstr "Usuario creación"
 
+msgctxt "field:base.external.mapping,engine:"
+msgid "Engine"
+msgstr "Motor"
+
 msgctxt "field:base.external.mapping,id:"
 msgid "ID"
 msgstr "ID"
@@ -49,6 +53,10 @@ msgstr "Código"
 msgctxt "field:base.external.mapping,rec_name:"
 msgid "Name"
 msgstr "Nombre"
+
+msgctxt "field:base.external.mapping,render_tags:"
+msgid "Render Tags"
+msgstr "Renderizar etiquetas"
 
 msgctxt "field:base.external.mapping,state:"
 msgid "State"
