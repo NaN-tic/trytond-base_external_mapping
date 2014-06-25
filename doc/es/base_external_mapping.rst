@@ -235,3 +235,17 @@ Un ejemplo de método browse para un campo **Función de salida** podría ser:
     with transaction.set_context(**context):
         product = pool.get('product.product').browse(record_id)
         result = product.name
+
+Renderizar etiquetas
+--------------------
+
+Si en el mapeo se activa la opción "Renderizar etiquetas" activará la conversión
+de etiquetas a su valor.
+
+Por ejemplo, si a un producto a la descripción dispone de la etiqueta:
+
+.. code:: python
+
+    ${record.name}
+
+El valor resultante será el nombre del producto (record es el objeto orígen).
