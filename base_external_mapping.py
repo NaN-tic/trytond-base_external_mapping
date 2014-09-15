@@ -9,6 +9,7 @@ from trytond.tools import safe_eval
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
 from datetime import datetime
+from decimal import Decimal
 import logging
 try:
     from jinja2 import Template as Jinja2Template
@@ -171,7 +172,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             if 'result' in localspace else False)
                 else:
                     result = values[mapping_line.external_field]
-                # Force type of result to be float, int or bool (def is str)
+                # Force type of result to be float, int decimal or bool (def is str)
                 if mapping_line.external_type == 'float':
                     try:
                         result = float(result)
@@ -180,6 +181,11 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 if mapping_line.external_type == 'int':
                     try:
                         result = int(result)
+                    except:
+                        pass
+                if mapping_line.external_type == 'decimal':
+                    try:
+                        result = Decimal(result)
                     except:
                         pass
                 if mapping_line.external_type == 'bool':
@@ -423,6 +429,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         ('str', 'String'),
         ('bool', 'Boolean'),
         ('int', 'Integer'),
+        ('decimal','Decimal'),
         ('float', 'Float'),
         ('date', 'Date'),
     ], 'External Type', required=True)
