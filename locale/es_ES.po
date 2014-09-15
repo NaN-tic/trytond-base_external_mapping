@@ -234,6 +234,10 @@ msgid "Date"
 msgstr "Fecha"
 
 msgctxt "selection:base.external.mapping.line,external_type:"
+msgid "Decimal"
+msgstr "Decimal"
+
+msgctxt "selection:base.external.mapping.line,external_type:"
 msgid "Float"
 msgstr "Flotante"
 
