@@ -410,6 +410,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
         template_context = self.template_context()
         return template.render(template_context).encode('utf-8')
 
+    @classmethod
+    def check_xml_record(cls, records, values):
+        return True
+
 
 class BaseExternalMappingLine(ModelSQL, ModelView):
     'Base External Mapping Line'
@@ -496,3 +500,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     @fields.depends('field', 'external_field')
     def on_change_external_field(self):
         return self.on_change_field()
+
+    @classmethod
+    def check_xml_record(cls, records, values):
+        return True
