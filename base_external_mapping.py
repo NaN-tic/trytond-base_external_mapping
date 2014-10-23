@@ -16,7 +16,7 @@ try:
     jinja2_loaded = True
 except ImportError:
     jinja2_loaded = False
-    logging.getLogger('electronic_mail_template').error(
+    logging.getLogger('base_extenal_mapping').error(
         'Unable to import jinja2. Install jinja2 package.')
 
 __all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
