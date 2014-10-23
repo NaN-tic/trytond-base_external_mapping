@@ -38,15 +38,15 @@ class BaseExternalMapping(ModelSQL, ModelView):
             },
         depends=['state'])
     mapping_lines = fields.One2Many('base.external.mapping.line', 'mapping',
-            'Mapping Lines',)
+        'Mapping Lines',)
     state = fields.Selection(
         [('draft', 'Draft'), ('done', 'Done')],
         "State", required=True, readonly=True)
     render_tags = fields.Boolean('Render Tags')
     engine = fields.Selection('get_engines', 'Engine', states={
-            'required': Bool(Eval('render_tags')),
-            'invisible': Not(Bool(Eval('render_tags'))),
-            })
+        'required': Bool(Eval('render_tags')),
+        'invisible': Not(Bool(Eval('render_tags'))),
+        })
 
     @classmethod
     def __setup__(cls):
@@ -419,7 +419,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     'Base External Mapping Line'
     __name__ = 'base.external.mapping.line'
     mapping = fields.Many2One('base.external.mapping', 'External Mapping',
-            ondelete='CASCADE')
+        required=True, ondelete='CASCADE')
     field = fields.Many2One('ir.model.field', 'Field',
         domain=[('model', '=', Eval('_parent_mapping', {}).get('model'))],
         select=True, required=True)
@@ -428,7 +428,7 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         ('in', 'Tryton <- External'),
         ('in_out', 'Tryton <-> External'),
         ('out', 'Tryton -> External'),
-    ], 'Type', required=True)
+        ], 'Type', required=True)
     external_type = fields.Selection([
         ('str', 'String'),
         ('bool', 'Boolean'),
@@ -436,11 +436,10 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         ('decimal','Decimal'),
         ('float', 'Float'),
         ('date', 'Date'),
-    ], 'External Type', required=True)
+        ], 'External Type', required=True)
     translate = fields.Boolean('Translate',
         help='Check this option to export fields with locale sufix.'
-            'Example: name_en'
-    )
+            'Example: name_en')
     active = fields.Boolean('Active')
     exclude_update = fields.Boolean('Exclude Update',
         help='When update data (write), this field is excluded')
@@ -448,27 +447,25 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         help='The order you want to relate columns of the file with fields'
             'of Tryton')
     in_function = fields.Text('Import to Tryton',
-            help='Type the python code for mapping this field.\n'
-                'You can use:\n'
-                '  * self: To make reference to this mapping record.\n'
-                '  * pool: To make reference to the data base objects.\n'
-                '  * value: The value of this field.\n'
-                '  * values: Values dict (key is from external data).\n'
-                'You must return a variable called "result" with the'
-                ' result of the compute.'
-            )
+        help='Type the python code for mapping this field.\n'
+            'You can use:\n'
+            '  * self: To make reference to this mapping record.\n'
+            '  * pool: To make reference to the data base objects.\n'
+            '  * value: The value of this field.\n'
+            '  * values: Values dict (key is from external data).\n'
+            'You must return a variable called "result" with the'
+            ' result of the compute.')
     out_function = fields.Text('Export from Tryton',
-            help='Type the python code for mapping this field.\n'
-                'You can use:\n'
-                '  * self: To make reference to this mapping record.\n'
-                '  * pool: To make reference to the data base objects.\n'
-                '  * records: List IDs you call.\n'
-                '  * record: ID you call.\n'
-                '  * transaction: Transaction()\n'
-                '  * context: Dictonary context\n'
-                'You must return a variable called "result" with the'
-                ' result of the compute.'
-            )
+        help='Type the python code for mapping this field.\n'
+            'You can use:\n'
+            '  * self: To make reference to this mapping record.\n'
+            '  * pool: To make reference to the data base objects.\n'
+            '  * records: List IDs you call.\n'
+            '  * record: ID you call.\n'
+            '  * transaction: Transaction()\n'
+            '  * context: Dictonary context\n'
+            'You must return a variable called "result" with the'
+            ' result of the compute.')
 
     @classmethod
     def __setup__(cls):
