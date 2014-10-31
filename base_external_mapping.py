@@ -178,22 +178,22 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         result = float(result)
                     except:
                         pass
-                if mapping_line.external_type == 'int':
+                elif mapping_line.external_type == 'int':
                     try:
                         result = int(result)
                     except:
                         pass
-                if mapping_line.external_type == 'decimal':
+                elif mapping_line.external_type == 'decimal':
                     try:
                         result = Decimal(result)
                     except:
                         pass
-                if mapping_line.external_type == 'bool':
+                elif mapping_line.external_type == 'bool':
                     if result:
                         result = True
                     else:
                         result = False
-                if mapping_line.external_type == 'date':
+                elif mapping_line.external_type == 'date':
                     try:
                         result = datetime.strptime(result, '%Y-%m-%d')
                     except:
