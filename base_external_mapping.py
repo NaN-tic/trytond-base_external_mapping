@@ -198,6 +198,11 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         result = datetime.strptime(result, '%Y-%m-%d')
                     except:
                         pass
+                elif mapping_line.external_type == 'str':
+                    if result:
+                        result = '%s' % result
+                    else:
+                        result = False
 
                 # Add in dict all fields type dict
                 if mapping_line.field.ttype == 'dict':
