@@ -202,7 +202,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     if result:
                         result = '%s' % result
                     else:
-                        result = False
+                        result = None
 
                 # Add in dict all fields type dict
                 if mapping_line.field.ttype == 'dict':
