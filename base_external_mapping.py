@@ -187,7 +187,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     try:
                         result = Decimal(result)
                     except:
-                        pass
+                        result = None
                 elif mapping_line.external_type == 'bool':
                     if result:
                         result = True
