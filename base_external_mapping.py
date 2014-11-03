@@ -173,7 +173,9 @@ class BaseExternalMapping(ModelSQL, ModelView):
                 else:
                     result = values[mapping_line.external_field]
                 # Force type of result to be float, int decimal or bool (def is str)
-                if mapping_line.external_type == 'float':
+                if isinstance(result, (ModelSQL, tuple, list, dict, set)):
+                    pass
+                elif mapping_line.external_type == 'float':
                     try:
                         result = float(result)
                     except:
@@ -198,8 +200,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                         result = datetime.strptime(result, '%Y-%m-%d')
                     except:
                         pass
-                elif (mapping_line.external_type == 'str'
-                        and not isinstance(result, (tuple, list, dict, set))):
+                elif mapping_line.external_type == 'str':
                     if result:
                         result = '%s' % result
                     else:
