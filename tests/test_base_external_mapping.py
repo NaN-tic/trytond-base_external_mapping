@@ -1,16 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-#This file is part base_external_mapping module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains
-#the full copyright notices and license terms.
-
-import sys
-import os
-DIR = os.path.abspath(os.path.normpath(os.path.join(__file__,
-    '..', '..', '..', '..', '..', 'trytond')))
-if os.path.isdir(DIR):
-    sys.path.insert(0, os.path.dirname(DIR))
-
+# This file is partbase_external_mapping module for Tryton.
+# The COPYRIGHT file at the top level of this repository contains
+# the full copyright notices and license terms.
 import unittest
 from decimal import Decimal
 
@@ -33,9 +25,7 @@ field_type = {
 
 
 class BaseExternalMappingTestCase(unittest.TestCase):
-    '''
-    Test BaseExternalMapping module.
-    '''
+    'Test BaseExternalMapping module'
 
     def setUp(self):
         trytond.tests.test_tryton.install_module('product')
@@ -48,15 +38,11 @@ class BaseExternalMappingTestCase(unittest.TestCase):
         self.product = POOL.get('product.product')
 
     def test0005views(self):
-        '''
-        Test views.
-        '''
+        'Test views'
         test_view('base_external_mapping')
 
     def test0006depends(self):
-        '''
-        Test depends.
-        '''
+        'Test depends'
         test_depends()
 
     def test0010create_mapping(self):
