@@ -249,3 +249,22 @@ Por ejemplo, si a un producto a la descripción dispone de la etiqueta:
     ${record.name}
 
 El valor resultante será el nombre del producto (record es el objeto orígen).
+
+Campos diccionarios
+-------------------
+
+Si en nuestro mapeo usamos algún campo del tipo diccionario, no mapearemos el campo ya con valores del diccionario.
+Por cada elemento del diccionario, será una columna de entrada y al final si el campo es del tipo diccionario, este
+se transformará a diccionario.
+
+Por ejemplo, tenemos un campo diccionario que tiene tres valores. Cada campo, será una columna d'entrada, por ejemplo un CSV seria
+
+.. code:: python
+
+    campo1,campo2,campo3
+
+Si el campo es un diccionario, ya nos creará los valores en formato diccionario:
+
+.. code:: python
+
+    {'campo1': 'valor1', 'campo2': 'valor2', 'campo3': valor3'}
