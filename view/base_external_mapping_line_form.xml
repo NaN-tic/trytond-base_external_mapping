@@ -4,19 +4,15 @@ The COPYRIGHT file at the top level of this repository contains the full
 copyright notices and license terms. -->
 <form string="Mapping Line" col="8">
     <label name="field"/>
-    <field name="field"/>
-    <label name="format_"/>
-    <field name="format_"/>
-    <label name="ttype"/>
-    <field name="ttype"/>
+    <field name="field" colspan="2"/>
     <label name="mapping_type"/>
-    <field name="mapping_type"/>
+    <field name="mapping_type" colspan="2"/>
     <label name="active"/>
     <field name="active"/>
     <label name="external_field"/>
-    <field name="external_field"/>
+    <field name="external_field" colspan="2"/>
     <label name="external_type"/>
-    <field name="external_type"/>
+    <field name="external_type" colspan="2"/>
     <label name="sequence"/>
     <field name="sequence"/>
     <label name="translate"/>

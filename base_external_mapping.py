@@ -4,7 +4,7 @@
 from genshi.template import NewTextTemplate as TextTemplate
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
-from trytond.pyson import Bool, Eval, In, Not
+from trytond.pyson import Bool, Eval, Not
 from trytond.tools import safe_eval
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
@@ -473,36 +473,11 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
             '  * context: Dictonary context\n'
             'You must return a variable called "result" with the'
             ' result of the compute.')
-    ttype = fields.Function(fields.Char('Field Type',
-        states={
-            'invisible': True
-            }), 'on_change_with_ttype')
-    format_ = fields.Char('Date Format',
-        states={
-            'invisible': Not(In(Eval('ttype'),
-                        ['datetime', 'date', 'timestamp', 'time'])),
-            'required': In(Eval('ttype'),
-                        ['datetime', 'date', 'timestamp', 'time']),
-            },
-        help='Set the csv format of the DateTime, Date or Timestamp data.\n\n'
-            '%d: Day.\t\t\t\t%H: Hours.\n'
-            '%m: Month.\t\t\t%M: Minutes.\n'
-            '%Y: Year.\t\t\t\t%S: Seconds.\n\n'
-            'Use commas to separate more than one field.\n\n'
-            'Eg:\n\n%d/%m/%Y,%H:%M:%S\n\n'
-            'Will match date and time from two fields like \'13/01/2015\' and '
-            '\'17:01:56\'\n\n'
-            'To see more information visit: '
-            'https://docs.python.org/2/library/datetime.html'
-            '?highlight=datetime#strftime-and-strptime-behavior')
 
     @classmethod
     def __setup__(cls):
         super(BaseExternalMappingLine, cls).__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
-        cls._error_messages.update({
-                'field_is_functional': 'The field %s is a functional field.',
-                })
 
     @staticmethod
     def default_active():
@@ -526,11 +501,6 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
         else:
             return {'name': self.external_field}
 
-    @fields.depends('field')
-    def on_change_with_ttype(self, name=None):
-        if self.field:
-            return self.field.ttype
-
     @fields.depends('field', 'external_field')
     def on_change_external_field(self):
         return self.on_change_field()
@@ -538,18 +508,3 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     @classmethod
     def check_xml_record(cls, records, values):
         return True
-
-    @classmethod
-    def validate(cls, mapping_lines):
-        super(BaseExternalMappingLine, cls).validate(mapping_lines)
-        cls.check_function_field(mapping_lines)
-
-    @classmethod
-    def check_function_field(cls, mapping_lines):
-        pool = Pool()
-        for line in mapping_lines:
-            model = pool.get(line.mapping.model.model)
-            field = line.field
-            if isinstance(model._fields[field.name], fields.Function):
-                cls.raise_user_error('field_is_functional',
-                    error_args=field.name)
