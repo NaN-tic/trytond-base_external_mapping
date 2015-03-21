@@ -2,17 +2,17 @@
 <!-- This file is part of base_external_mapping module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full
 copyright notices and license terms. -->
-<form string="Mapping Line" col="8">
+<form string="Mapping Line">
     <label name="field"/>
-    <field name="field" colspan="2"/>
+    <field name="field"/>
     <label name="mapping_type"/>
-    <field name="mapping_type" colspan="2"/>
+    <field name="mapping_type"/>
     <label name="active"/>
     <field name="active"/>
     <label name="external_field"/>
-    <field name="external_field" colspan="2"/>
+    <field name="external_field"/>
     <label name="external_type"/>
-    <field name="external_type" colspan="2"/>
+    <field name="external_type"/>
     <label name="sequence"/>
     <field name="sequence"/>
     <label name="translate"/>
@@ -22,8 +22,8 @@ copyright notices and license terms. -->
     <label name="mapping"/>
     <field name="mapping"/>
     <newline/>
-    <separator name="in_function" colspan="8"/>
-    <field name="in_function" colspan="8"/>
-    <separator name="out_function" colspan="8"/>
-    <field name="out_function" colspan="8"/>
+    <separator name="in_function" colspan="6"/>
+    <field name="in_function" colspan="6"/>
+    <separator name="out_function" colspan="6"/>
+    <field name="out_function" colspan="6"/>
 </form>
