@@ -5,21 +5,24 @@ from genshi.template import NewTextTemplate as TextTemplate
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval, Not
-from trytond.tools import safe_eval
 from trytond.transaction import Transaction
 from trytond.rpc import RPC
+from simpleeval import simple_eval
 from datetime import datetime
 from decimal import Decimal
 import logging
+
 try:
     from jinja2 import Template as Jinja2Template
     jinja2_loaded = True
 except ImportError:
+    logger = logging.getLogger(__name__)
+    logger.error('Unable to import jinja2. Install jinja2 package.')
     jinja2_loaded = False
-    logging.getLogger('base_extenal_mapping').error(
-        'Unable to import jinja2. Install jinja2 package.')
 
 __all__ = ['BaseExternalMapping', 'BaseExternalMappingLine']
+
+logger = logging.getLogger(__name__)
 
 
 class BaseExternalMapping(ModelSQL, ModelView):
@@ -125,7 +128,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
             @return: dictionary with recalculated Tryton values
         """
         results = {}
-        logger = logging.getLogger('base_external_mapping')
+
         mappings = cls.search([('name', '=', name)])
         if not len(mappings) > 0:
             logger.info('Not code available mapping: %s' % name)
@@ -231,7 +234,6 @@ class BaseExternalMapping(ModelSQL, ModelView):
         """
         res = []
         relational_fields = ['many2one', 'one2many', 'many2many']
-        logger = logging.getLogger('base_external_mapping')
 
         if isinstance(records, (int, long)):
             records = [records]
@@ -358,7 +360,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
         """
         exclude_lines = []
         mappings = cls.search([('name', '=', name)])
-        logger = logging.getLogger('base_external_mapping')
+
         if not len(mappings) > 0:
             logger.info('Not code available mapping: %s' % name)
             return False
@@ -393,7 +395,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
             return u''
         assert self is not None, 'Record is undefined'
         template_context = self.template_context()
-        return safe_eval(expression, template_context)
+        return simple_eval(expression, template_context)
 
     def _engine_genshi(self, expression, record):
         '''
