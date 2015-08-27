@@ -497,15 +497,10 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     def default_sequence():
         return 1
 
-    def on_change_field(self):
-        if self.field:
-            return {'name': self.field.name}
-        else:
-            return {'name': self.external_field}
-
     @fields.depends('field', 'external_field')
-    def on_change_external_field(self):
-        return self.on_change_field()
+    def on_change_field(self):
+        if self.field and not self.external_field:
+            self.external_field = self.field.name
 
     @classmethod
     def check_xml_record(cls, records, values):
