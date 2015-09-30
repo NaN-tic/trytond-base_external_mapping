@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from genshi.template import NewTextTemplate as TextTemplate
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, fields, Unique
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval, Not
 from trytond.transaction import Transaction
@@ -54,6 +54,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
     @classmethod
     def __setup__(cls):
         super(BaseExternalMapping, cls).__setup__()
+        t = cls.__table__()
         cls.__rpc__.update({
             'map_external_to_tryton': RPC(),
             'map_tryton_to_external': RPC(),
@@ -63,8 +64,10 @@ class BaseExternalMapping(ModelSQL, ModelView):
             'syntax_error': ('Syntax Error:\n%s'),
             'unknown_error': ('Unknown Error:\n%s'),
             })
-        cls._sql_constraints += [('name_uniq', 'UNIQUE (name)',
-                'The name of the Mapping must be unique!')]
+        cls._sql_constraints += [
+            ('name_uniq', Unique(t, t.name),
+                'The name of the Mapping must be unique!'),
+            ]
 
     @staticmethod
     def default_engine():
