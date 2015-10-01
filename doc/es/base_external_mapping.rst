@@ -35,8 +35,7 @@ los campos de Tryton con los campos externos (campo tryton <-> campo externo). P
 de Tryton y un campo externo podría ser:
 
 * name <-> nombre
-* vat_number <-> cif
-* reference <-> code
+* code <-> código
 
 Otra de las funcionalidades del Base External Mapping es hacer búsquedas o cálculos con los datos. En los campos
 "Importar a Tryton" o "Exportar a Tryton" podemos añadir código del framework de Tryton para cálculos. En este
