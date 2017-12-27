@@ -116,8 +116,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
             res.append(new_mapping)
         return res
 
-    @staticmethod
-    def default_state():
+    @classmethod
+    def default_state(cls):
         return 'draft'
 
     @classmethod

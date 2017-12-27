@@ -3,11 +3,11 @@
 # the full copyright notices and license terms.
 
 from trytond.pool import Pool
-from .base_external_mapping import *
+from . import base_external_mapping
 
 
 def register():
     Pool.register(
-        BaseExternalMapping,
-        BaseExternalMappingLine,
+        base_external_mapping.BaseExternalMapping,
+        base_external_mapping.BaseExternalMappingLine,
         module='base_external_mapping', type_='model')
