@@ -1,26 +1,6 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
-
-msgctxt "error:base.external.mapping:"
-msgid ""
-"Syntax Error:\n"
-"%s"
-msgstr ""
-"Error de sintaxis:\n"
-"%s"
-
-msgctxt "error:base.external.mapping:"
-msgid "The name of the Mapping must be unique!"
-msgstr "¡El nombre de la asignación debe ser única!"
-
-msgctxt "error:base.external.mapping:"
-msgid ""
-"Unknown Error:\n"
-"%s"
-msgstr ""
-"Error desconocido:\n"
-"%s"
 
 msgctxt "field:base.external.mapping,create_date:"
 msgid "Create Date"
