@@ -152,22 +152,16 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             # raises an error too, so it could be necessary
                             # to make a commit or a roolback. I don't know yet.
                         except SyntaxError:
-                            logger.error('Syntax Error in mapping %s, line %s.'
-                                ' Error: %s' %
-                                (mapping_line.mapping.name,
-                                    mapping_line.field.name, e))
+                            logger.error('Syntax Error in mapping %s, line %s.' %
+                                (mapping_line.mapping.name, mapping_line.field.name))
                             return False
                         except NameError:
-                            logger.error('Syntax Error in mapping %s, line %s.'
-                                ' Error: %s' %
-                                (mapping_line.mapping.name,
-                                    mapping_line.field.name, e))
+                            logger.error('Syntax Error in mapping %s, line %s.' %
+                                (mapping_line.mapping.name, mapping_line.field.name))
                             return False
                         except Exception:
-                            logger.error('Unknown Error in mapping %s, line '
-                                '%s. Message: %s' %
-                                (mapping_line.mapping.name,
-                                    mapping_line.field.name, e))
+                            logger.error('Unknown Error in mapping %s, line %s.' %
+                                (mapping_line.mapping.name, mapping_line.field.name))
                             return False
                         result = (localspace['result']
                             if 'result' in localspace else False)
@@ -305,7 +299,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             exec(out_function, localspace)
                         except Exception:
                             logger.error('Unknown Error exporting line with'
-                                ' id %s. Message: %s' % (mapping_line.id, e))
+                                ' id %s.' % (mapping_line.id))
                             return False
                         data_value = localspace.get('result')
                         if not data_value:
