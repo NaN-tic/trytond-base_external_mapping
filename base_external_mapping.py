@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from genshi.template import NewTextTemplate as TextTemplate
-from trytond.model import ModelView, ModelSQL, fields, Unique
+from trytond.model import ModelView, ModelSQL, fields, Unique, sequence_ordered
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval, Not
 from trytond.transaction import Transaction
@@ -60,18 +60,13 @@ class BaseExternalMapping(ModelSQL, ModelView):
             'map_tryton_to_external': RPC(),
             'map_exclude_update': RPC(),
         })
-        cls._error_messages.update({
-            'syntax_error': ('Syntax Error:\n%s'),
-            'unknown_error': ('Unknown Error:\n%s'),
-            })
         cls._sql_constraints += [
             ('name_uniq', Unique(t, t.name),
-                'The name of the Mapping must be unique!'),
+                'base_external_mapping.msg_unique'),
             ]
 
     @staticmethod
     def default_engine():
-        '''Default Engine'''
         return 'genshi'
 
     @classmethod
@@ -151,24 +146,24 @@ class BaseExternalMapping(ModelSQL, ModelView):
                     }
                     with Transaction().set_context(**context):
                         try:
-                            exec mapping_line.in_function in localspace
+                            exec(mapping_line.in_function, localspace)
                             # It is possible that if there is an error in the
                             # code of the field, when execute it, the database
                             # raises an error too, so it could be necessary
                             # to make a commit or a roolback. I don't know yet.
-                        except SyntaxError, e:
+                        except SyntaxError:
                             logger.error('Syntax Error in mapping %s, line %s.'
                                 ' Error: %s' %
                                 (mapping_line.mapping.name,
                                     mapping_line.field.name, e))
                             return False
-                        except NameError, e:
+                        except NameError:
                             logger.error('Syntax Error in mapping %s, line %s.'
                                 ' Error: %s' %
                                 (mapping_line.mapping.name,
                                     mapping_line.field.name, e))
                             return False
-                        except Exception, e:
+                        except Exception:
                             logger.error('Unknown Error in mapping %s, line '
                                 '%s. Message: %s' %
                                 (mapping_line.mapping.name,
@@ -307,8 +302,8 @@ class BaseExternalMapping(ModelSQL, ModelView):
                             "context": context,
                         }
                         try:
-                            exec out_function in localspace
-                        except Exception, e:
+                            exec(out_function, localspace)
+                        except Exception:
                             logger.error('Unknown Error exporting line with'
                                 ' id %s. Message: %s' % (mapping_line.id, e))
                             return False
@@ -427,7 +422,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
         return True
 
 
-class BaseExternalMappingLine(ModelSQL, ModelView):
+class BaseExternalMappingLine(sequence_ordered(), ModelSQL, ModelView):
     'Base External Mapping Line'
     __name__ = 'base.external.mapping.line'
     mapping = fields.Many2One('base.external.mapping', 'External Mapping',
@@ -455,9 +450,6 @@ class BaseExternalMappingLine(ModelSQL, ModelView):
     active = fields.Boolean('Active')
     exclude_update = fields.Boolean('Exclude Update',
         help='When update data (write), this field is excluded')
-    sequence = fields.Integer('Sequence',
-        help='The order you want to relate columns of the file with fields'
-            'of Tryton')
     in_function = fields.Text('Import to Tryton',
         help='Type the python code for mapping this field.\n'
             'You can use:\n'
