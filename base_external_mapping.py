@@ -227,7 +227,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
         res = []
         relational_fields = ['many2one', 'one2many', 'many2many']
 
-        if isinstance(records, (int, long)):
+        if isinstance(records, int):
             records = [records]
         if not len(records) > 0:
             logger.error('Not set IDs from %s' % name)
