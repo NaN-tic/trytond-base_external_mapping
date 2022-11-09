@@ -422,8 +422,9 @@ class BaseExternalMappingLine(sequence_ordered(), ModelSQL, ModelView):
     mapping = fields.Many2One('base.external.mapping', 'External Mapping',
         required=True, ondelete='CASCADE')
     field = fields.Many2One('ir.model.field', 'Field',
-        domain=[('model', '=', Eval('_parent_mapping', {}).get('model'))],
-        select=True, required=True)
+        domain=[
+            ('model', '=', Eval('_parent_mapping', {}).get('model')),
+        ], required=True)
     external_field = fields.Char('External Field', required=True)
     mapping_type = fields.Selection([
         ('in', 'Tryton <- External'),
