@@ -85,6 +85,7 @@ class BaseExternalMapping(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
+        vlist = [x.copy() for x in vlist]
         for vals in vlist:
             vals['state'] = 'done'
         return super(BaseExternalMapping, cls).create(vlist)
