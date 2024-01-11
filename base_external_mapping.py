@@ -32,14 +32,12 @@ class BaseExternalMapping(ModelSQL, ModelView):
         states={
             'readonly': Eval('state').in_(['done']),
             },
-        depends=['state'],
         help='Use lowercase, az09 characters and separated by . (dot)')
     model = fields.Many2One('ir.model', 'Model', required=True,
         ondelete='CASCADE',
         states={
             'readonly': Eval('state').in_(['done']),
-            },
-        depends=['state'])
+            })
     mapping_lines = fields.One2Many('base.external.mapping.line', 'mapping',
         'Mapping Lines',)
     state = fields.Selection(
